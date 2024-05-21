@@ -187,7 +187,7 @@ class _LogInState extends State<LogIn> {
                     onPressed: () {
                       GoRouter.of(context).pushNamed(Routes.signup);
                     },
-                    child: CustomText("Don't  have an account?Sign Up"),
+                    child: CustomText("Don'tt  have an account?Sign Up"),
                   ),
                 ],
               ),
