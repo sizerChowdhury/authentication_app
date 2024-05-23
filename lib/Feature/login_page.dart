@@ -16,19 +16,6 @@ import '../core/widgets/custom_text.dart';
 import '../core/widgets/custom_text_filed.dart';
 import '../core/widgets/custom_welcome_text.dart';
 import '../core/widgets/custom_underline.dart';
-import 'dart:io';
-import '../core/widgets/custom_button.dart';
-import 'sign_up_page.dart';
-import 'forget_password_page.dart';
-import 'email_confirmation_page.dart';
-import 'reset_password_page.dart';
-import 'change_password_page.dart';
-import 'update_profile_page.dart';
-import 'package:first_app/core/gen/assets.gen.dart';
-
-void main() {
-  runApp(LogIn());
-}
 
 class LogIn extends StatefulWidget {
   @override
@@ -58,7 +45,7 @@ class _LogInState extends State<LogIn> {
             child: Center(
               child: Column(
                 children: [
-                  SizedBox(height: 25),
+                  SizedBox(height: 45),
                   CustomWelcomeText('Welcome back! Sign in using your social'),
                   CustomWelcomeText('account or email to continue us'),
                   SizedBox(height: 30),
@@ -72,9 +59,9 @@ class _LogInState extends State<LogIn> {
                       CircularTile(imagePath: 'Assets/Images/apple.png'),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 55),
                   Padding(
-                    padding: const EdgeInsets.only(left: 35, right: 35),
+                    padding: const EdgeInsets.only(left: 24, right: 24),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -95,9 +82,9 @@ class _LogInState extends State<LogIn> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   Padding(
-                    padding: const EdgeInsets.only(left: 35, right: 35),
+                    padding: const EdgeInsets.only(left: 24, right: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -126,12 +113,12 @@ class _LogInState extends State<LogIn> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 35),
+                    padding: const EdgeInsets.only(right: 24),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 35),
+                          padding: const EdgeInsets.only(left: 24),
                           child: Row(
                             children: [
                               Checkbox(
@@ -152,10 +139,10 @@ class _LogInState extends State<LogIn> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 115),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.only(left: 35, right: 35),
+                    padding: EdgeInsets.only(left: 24, right: 24),
                     child: ElevatedButton(
                         onPressed: userEmail != '' && userPass != ''
                             ? buttonCall
@@ -199,9 +186,6 @@ class _LogInState extends State<LogIn> {
   }
 
   void buttonCall() async {
-    // setState(() {
-    //   isButtonActive = false;
-    // });
     try {
       Response response = await post(
         Uri.parse('http://34.72.136.54:4067/api/v1/auth/login'),

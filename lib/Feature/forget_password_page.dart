@@ -49,9 +49,9 @@ class ForgetPassword extends StatelessWidget {
                   CustomWelcomeText(
                       'Enter your email adrres. We will send a code'),
                   CustomWelcomeText('to verify your identity'),
-                  SizedBox(height: 110),
+                  SizedBox(height: 140),
                   Padding(
-                    padding: const EdgeInsets.only(left: 35, right: 35),
+                    padding: const EdgeInsets.only(left: 24, right: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -63,7 +63,7 @@ class ForgetPassword extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 150),
+                  SizedBox(height: 320),
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.only(left: 35, right: 35),
@@ -83,12 +83,10 @@ class ForgetPassword extends StatelessWidget {
                             String? Email = email.text.toString();
                             String pageSelector = "forgetPassword";
                             print('OTP sent successfully');
-                            context
-                                .go('/emailConfirmation/$Email/$pageSelector');
-                            // GoRouter.of(context).pushNamed(Routes.emailConfirmation, pathParameters: {
-                            //   'email':Email,
-                            //   'previousPage':pageSelector,
-                            // });
+                            context.go(
+                                '/emailConfirmation/$Email/$pageSelector'
+                            );
+
                           } else {
                             print('failed');
                             showDialog(

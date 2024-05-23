@@ -67,9 +67,9 @@ class _SignUpState extends State<SignUp> {
                   CustomWelcomeText(
                       'Get chatting with friends and family today by'),
                   CustomWelcomeText('signing up for our chat app!'),
-                  SizedBox(height: 30),
+                  SizedBox(height: 45),
                   Padding(
-                    padding: const EdgeInsets.only(left: 35, right: 35),
+                    padding: const EdgeInsets.only(left: 24, right: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -94,7 +94,7 @@ class _SignUpState extends State<SignUp> {
                             });
                           },
                         ),
-                        SizedBox(height: 15),
+                        SizedBox(height: 10),
                         CustomText('Your email'),
                         CustomTextField(
                           controller: email,
@@ -106,7 +106,6 @@ class _SignUpState extends State<SignUp> {
                           },
                         ),
                         SizedBox(height: 10),
-                        SizedBox(height: 15),
                         CustomText('Password'),
                         CustomPasswordField(
                           controller: password,
@@ -120,12 +119,12 @@ class _SignUpState extends State<SignUp> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 50),
+                  SizedBox(height: 140),
                   // CustomButton(
                   //     buttonText: 'Create an account', url: '/updateProfile'),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.only(left: 35, right: 35),
+                    padding: EdgeInsets.only(left: 24, right: 24),
                     child: ElevatedButton(
                       onPressed: userEmail != '' &&
                               userPass != '' &&

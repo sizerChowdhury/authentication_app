@@ -46,7 +46,7 @@ class ResetPassword extends StatelessWidget {
                   SizedBox(height: 20),
                   CustomWelcomeText("Please enter a new password. Don't enter"),
                   CustomWelcomeText('your old password'),
-                  SizedBox(height: 110),
+                  SizedBox(height: 130),
                   Padding(
                     padding: const EdgeInsets.only(left: 35, right: 35),
                     child: Column(
@@ -66,7 +66,7 @@ class ResetPassword extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 80),
+                  SizedBox(height: 280),
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.only(left: 35, right: 35),

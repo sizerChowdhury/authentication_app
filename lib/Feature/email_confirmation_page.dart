@@ -95,9 +95,9 @@ class _EmailConfirmationState extends State<EmailConfirmation> {
                 children: [
                   CustomWelcomeText("We've sent a code to your email address"),
                   CustomWelcomeText("Please check your inbox"),
-                  SizedBox(height: 110),
+                  SizedBox(height: 140),
                   Padding(
-                    padding: const EdgeInsets.only(left: 35, right: 35),
+                    padding: const EdgeInsets.only(left: 24, right: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -114,7 +114,7 @@ class _EmailConfirmationState extends State<EmailConfirmation> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 150),
+                  SizedBox(height: 350),
                   ElevatedButton(
                     onPressed: userCode != '' ? buttonCall : null,
                     child: Text(
@@ -145,7 +145,6 @@ class _EmailConfirmationState extends State<EmailConfirmation> {
                   if (_countDown == 0)
                     TextButton(
                       onPressed: () async {
-                        // resendOtp();
                         try {
                           Response response = await post(
                             Uri.parse(
