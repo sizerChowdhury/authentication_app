@@ -214,7 +214,7 @@ class _LogInState extends State<LogIn> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('OK'),
+                  child: Text('OK '),
                 ),
               ],
             );
