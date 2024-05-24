@@ -8,67 +8,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
+import '../core/models/email_confirmation_state.dart';
 import '../core/navigation/routes/routes_name.dart';
 import '../core/widgets/custom_button.dart';
 import '../core/widgets/custom_text.dart';
 import '../core/widgets/custom_underline.dart';
 import '../core/gen/fonts.gen.dart';
-import '../counter.dart';
+import '../notifiers/email_confirmation_notifier.dart';
 
-// Define a state class to hold the data, error, and loading status
-class EmailConfirmationState {
-  String? error;
-  bool isLoading;
-  bool isSuccess;
-
-  EmailConfirmationState({
-    this.error,
-    this.isLoading = false,
-    this.isSuccess = false,
-  });
-
-  // CopyWith method to create a new instance with updated values
-  EmailConfirmationState copyWith({
-    String? error,
-    bool? isLoading,
-    bool? isSuccess,
-  }) {
-    return EmailConfirmationState(
-      error: error ?? this.error,
-      isLoading: isLoading ?? this.isLoading,
-      isSuccess: isSuccess ?? this.isSuccess,
-    );
-  }
-}
 
 final emailConfirmationProvider =
 StateNotifierProvider<EmailConfirmationNotifier, EmailConfirmationState>(
         (ref) => EmailConfirmationNotifier());
-
-class EmailConfirmationNotifier extends StateNotifier<EmailConfirmationState> {
-  EmailConfirmationNotifier() : super(EmailConfirmationState());
-
-  Future<void> submitEmail(String email) async {
-    state = state.copyWith(isLoading: true); // Set loading to true
-    try {
-      final response = await http.post(
-        Uri.parse('http://34.72.136.54:4067/api/v1/auth/forget-password'),
-        body: {'email': email},
-      );
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        state = state.copyWith(isSuccess: true);
-      } else {
-        state = state.copyWith(error: 'Invalid Email or Password');
-      }
-    } catch (e) {
-      state = state.copyWith(error: 'Error occurred');
-    } finally {
-      state = state.copyWith(isLoading: false); // Set loading to false
-    }
-  }
-}
-
-
 
 class ForgetPassword extends ConsumerWidget {
   ForgetPassword({Key? key}) : super(key: key);
