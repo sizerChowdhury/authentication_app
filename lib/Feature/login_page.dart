@@ -18,16 +18,22 @@ import '../core/widgets/custom_text_filed.dart';
 import '../core/widgets/custom_welcome_text.dart';
 import '../core/widgets/custom_underline.dart';
 import '../providers/auth_controller.dart';
+import '../providers/email_textfield_controller.dart';
+import '../providers/login_button_controller.dart';
+import '../providers/password_textfield_controller.dart';
 
 class LogIn extends ConsumerWidget {
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   LogIn({super.key});
-  bool _isSecurePassword = true;
+  bool temp = false;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     dynamic state = ref.watch(authControllerProvider);
+    bool loginButtonState = ref.watch(loginButtonControllerProvider);
+    bool emailState = ref.watch(emailControllerProvider);
+    bool passwordState = ref.watch(passwordControllerProvider);
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -88,12 +94,20 @@ class LogIn extends ConsumerWidget {
                         CustomTextField(
                           controller: email,
                           hintText: 'Enter your email',
+                          onChanged: (value) {
+                            ref.read(emailControllerProvider.notifier).update();
+                            ref.read(loginButtonControllerProvider.notifier).update();
+                          },
                         ),
                         SizedBox(height: 20),
                         CustomText('Password'),
                         CustomPasswordField(
                           controller: password,
                           hintText: 'Enter your password',
+                          onChanged: (value){
+                            ref.read(passwordControllerProvider.notifier).update();
+                            ref.read(loginButtonControllerProvider.notifier).update();
+                          },
                         ),
                       ],
                     ),
@@ -130,25 +144,24 @@ class LogIn extends ConsumerWidget {
                     width: double.infinity,
                     padding: EdgeInsets.only(left: 24, right: 24),
                     child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: loginButtonState
+                            ? () {
                           ref.read(authControllerProvider.notifier).signIn(
-                            email.text.toString(),password.text.toString(),
-                            context
-                          );
-                        },
-                        child:(state?.runtimeType.toString()=='AsyncLoading<dynamic>')
-                            ? const CircularProgressIndicator()
-                            : Text('LogIn',
-                          style: TextStyle(
-                            fontFamily: FontFamily.circular,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: Color(0xFF797C7B),
-                          ),
-                        ),
-                    style: const ButtonStyle(
+                              email.text.toString(),
+                              password.text.toString(),
+                              context);
+                        }: null,
+                      child:
+                      (state?.runtimeType.toString() == 'AsyncLoading<dynamic>')
+                          ? const CircularProgressIndicator(
+                          backgroundColor: Colors.white)
+                          : Text(
+                        'Login',
+                        style: const TextStyle(color: Color(0xFF797C7B)),
+                      ),
+                    style:ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(
-                        Color(0xFFF3F6F6),
+                        loginButtonState?Color(0xFF24786D):Color(0xFFD0CCC1),
                   ),
               minimumSize: WidgetStatePropertyAll(
                 Size(double.infinity, 50),
