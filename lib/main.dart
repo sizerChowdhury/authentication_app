@@ -5,17 +5,15 @@ import 'core/navigation/router_config/router_config.dart';
 void main() {
   // wrap the entire app with a ProviderScope so that widgets
   // will be able to read providers
-  runApp(MyApp(),
+  runApp(ProviderScope(child: MyApp()),
   );
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ProviderScope(
-      child: MaterialApp.router(
-        routerConfig: MyRouterConfig().router,
-      ),
+    return MaterialApp.router(
+      routerConfig: MyRouterConfig().router,
     );
   }
 }

@@ -15,10 +15,6 @@ import '../core/widgets/custom_underline.dart';
 import '../core/gen/fonts.gen.dart';
 import 'package:http/http.dart' as http;
 
-void main() {
-  runApp(SignUp());
-}
-
 class SignUp extends StatefulWidget {
   SignUp({super.key});
 

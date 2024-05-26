@@ -5,6 +5,7 @@ import 'package:first_app/core/gen/fonts.gen.dart';
 import 'package:first_app/Feature/sign_up_page.dart';
 import 'package:first_app/Feature/update_profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart';
@@ -16,22 +17,17 @@ import '../core/widgets/custom_text.dart';
 import '../core/widgets/custom_text_filed.dart';
 import '../core/widgets/custom_welcome_text.dart';
 import '../core/widgets/custom_underline.dart';
+import '../providers/auth_controller.dart';
 
-class LogIn extends StatefulWidget {
-  @override
-  State<LogIn> createState() => _LogInState();
-}
+class LogIn extends ConsumerWidget {
 
-class _LogInState extends State<LogIn> {
-  //const LogIn({super.key});
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  LogIn({super.key});
   bool _isSecurePassword = true;
-  String userEmail = '';
-  String userPass = '';
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    dynamic state = ref.watch(authControllerProvider);
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -92,22 +88,12 @@ class _LogInState extends State<LogIn> {
                         CustomTextField(
                           controller: email,
                           hintText: 'Enter your email',
-                          onChanged: (value) {
-                            setState(() {
-                              userEmail = value;
-                            });
-                          },
                         ),
                         SizedBox(height: 20),
                         CustomText('Password'),
                         CustomPasswordField(
                           controller: password,
                           hintText: 'Enter your password',
-                          onChanged: (value) {
-                            setState(() {
-                              userPass = value;
-                            });
-                          },
                         ),
                       ],
                     ),
@@ -144,32 +130,33 @@ class _LogInState extends State<LogIn> {
                     width: double.infinity,
                     padding: EdgeInsets.only(left: 24, right: 24),
                     child: ElevatedButton(
-                        onPressed: userEmail != '' && userPass != ''
-                            ? buttonCall
-                            : null,
-                        child: Text(
-                          'LogIn',
+                        onPressed: () {
+                          ref.read(authControllerProvider.notifier).signIn(
+                            email.text.toString(),password.text.toString(),
+                            context
+                          );
+                        },
+                        child:(state?.runtimeType.toString()=='AsyncLoading<dynamic>')
+                            ? const CircularProgressIndicator()
+                            : Text('LogIn',
                           style: TextStyle(
                             fontFamily: FontFamily.circular,
                             fontWeight: FontWeight.w400,
                             fontSize: 14,
-                            color: Color(0xFFFFFFFF),
+                            color: Color(0xFF797C7B),
                           ),
                         ),
-                        style: userEmail != '' && userPass != ''
-                            ? ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                  Color(0xFF24786D),
-                                ),
-                              )
-                            : ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                  Color(0xFFD0CCC1),
-                                ),
-                              )),
+                    style: const ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(
+                        Color(0xFFF3F6F6),
                   ),
+              minimumSize: WidgetStatePropertyAll(
+                Size(double.infinity, 50),
+              ),
+            ),
+                    )
+                  ),
+
                   TextButton(
                     onPressed: () {
                       GoRouter.of(context).pushNamed(Routes.signup);
@@ -183,46 +170,5 @@ class _LogInState extends State<LogIn> {
         ),
       ),
     );
-  }
-
-  void buttonCall() async {
-    try {
-      Response response = await post(
-        Uri.parse('http://34.72.136.54:4067/api/v1/auth/login'),
-        body: {
-          'email': email.text.toString(),
-          'password': password.text.toString(),
-          "OS": "Android",
-          "model": "Nexus 6",
-          "FCMToken": "Token1"
-        },
-      );
-      print(response.statusCode);
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        print('login successful');
-        GoRouter.of(context).pushNamed(Routes.profile);
-      } else {
-        print('login failed');
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Error! Bad request.'),
-              content: Text('Invalid Email or Password'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('OK '),
-                ),
-              ],
-            );
-          },
-        );
-      }
-    } catch (e) {
-      print(e.toString());
-    }
   }
 }
