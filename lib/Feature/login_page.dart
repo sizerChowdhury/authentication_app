@@ -9,19 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart';
 import '../core/navigation/routes/routes_name.dart';
 import '../core/widgets/circular_tile.dart';
-import '../core/widgets/button_text.dart';
 import '../core/widgets/custom_password_filed.dart';
 import '../core/widgets/custom_text.dart';
 import '../core/widgets/custom_text_filed.dart';
 import '../core/widgets/custom_welcome_text.dart';
 import '../core/widgets/custom_underline.dart';
 import '../providers/auth_controller.dart';
-import '../providers/email_textfield_controller.dart';
 import '../providers/login_button_controller.dart';
-import '../providers/password_textfield_controller.dart';
+
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -42,30 +39,22 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     super.initState();
 
     email.addListener(
-      () {
-        setState(() {
-          enableButtonNotifier = (
-            email: email.value.text.isNotEmpty,
-            password: password.value.text.isNotEmpty
-          );
-        });
-        print(enableButtonNotifier);
-      },
+      () => updateEnableButtonNotifier(),
     );
     password.addListener(
-      () {
-        setState(() {
-          enableButtonNotifier = (
-            email: email.value.text.isNotEmpty,
-            password: password.value.text.isNotEmpty
-          );
-        });
-        print(enableButtonNotifier);
-      },
+      () => updateEnableButtonNotifier(),
     );
   }
 
-  bool temp = false;
+  void updateEnableButtonNotifier() {
+    setState(() {
+      enableButtonNotifier = (
+        email: email.value.text.isNotEmpty,
+        password: password.value.text.isNotEmpty
+      );
+    });
+    print(enableButtonNotifier);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +70,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     bool loginButtonState = ref.watch(loginButtonControllerProvider);
 
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Stack(
             children: [AppbarTittle('Log In to Authy'), Underline(right: 77)],
@@ -144,26 +132,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         CustomTextField(
                           controller: email,
                           hintText: 'Enter your email',
-                          onChanged: (value) {
-                            ref.read(emailControllerProvider.notifier).update();
-                            ref
-                                .read(loginButtonControllerProvider.notifier)
-                                .update();
-                          },
                         ),
                         const SizedBox(height: 20),
                         const CustomText('Password'),
                         CustomPasswordField(
                           controller: password,
                           hintText: 'Enter your password',
-                          onChanged: (value) {
-                            ref
-                                .read(passwordControllerProvider.notifier)
-                                .update();
-                            ref
-                                .read(loginButtonControllerProvider.notifier)
-                                .update();
-                          },
                         ),
                       ],
                     ),
@@ -187,8 +161,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ),
                         TextButton(
                           onPressed: () {
-                            GoRouter.of(context)
-                                .pushNamed(Routes.forgetPassword);
+                            context.go("/forgetPassword");
                           },
                           child: const CustomText('Forget Password'),
                         ),
@@ -243,8 +216,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   Future<dynamic> _buildShowDialog(BuildContext context) {
