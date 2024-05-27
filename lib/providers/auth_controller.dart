@@ -226,3 +226,29 @@ class EmailConfirmation extends _$EmailConfirmation {
     });
   }
 }
+
+@riverpod
+class ForgetPassword extends _$ForgetPassword {
+  @override
+  FutureOr<bool?> build() async {
+    return null;
+  }
+
+  void otpConfirmation({required String email})
+  async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final response = await post(
+        Uri.parse('http://34.72.136.54:4067/api/v1/auth/forget-password'),
+        body: {
+          'email': email,
+        },
+      );
+      if(response.statusCode != 201) {
+        throw Exception('Something went wrong');
+      } else {
+        return true;
+      }
+    });
+  }
+}
