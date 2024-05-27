@@ -11,7 +11,7 @@ class MyRouterConfig{
   GoRouter router = GoRouter(routes: [
     GoRoute(
         name: Routes.login,
-        path: "/", builder: (context, state) => LogIn()),
+        path: "/", builder: (context, state) => LoginPage()),
     GoRoute(
         name: Routes.signup,
         path: "/signUp", builder: (context, state) => SignUp()),

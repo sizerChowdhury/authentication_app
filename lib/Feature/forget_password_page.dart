@@ -78,14 +78,14 @@ class ForgetPassword extends ConsumerWidget {
                       child: (state?.runtimeType.toString() == 'AsyncLoading<dynamic>')
                           ? const CircularProgressIndicator(
                           backgroundColor: Colors.white)
-                          : Text(
-                        'Submit',
-                        style: const TextStyle(
-                          fontFamily: FontFamily.circular,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: Color(0xFF797C7B),
-                        ),
+                          : emailState? Text(
+                        'Login',
+                        //#FFFFFF
+                        style: const TextStyle(color: Color(0xFFFFFFFF)),
+                      ):Text(
+                        'Login',
+                        //#FFFFFF
+                        style: const TextStyle(color: Color(0xFF797C7B)),
                       ),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(

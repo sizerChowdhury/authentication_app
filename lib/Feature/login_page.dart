@@ -4,6 +4,7 @@ import 'package:first_app/core/widgets/appbar_tittle.dart';
 import 'package:first_app/core/gen/fonts.gen.dart';
 import 'package:first_app/Feature/sign_up_page.dart';
 import 'package:first_app/Feature/update_profile_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -22,22 +23,68 @@ import '../providers/email_textfield_controller.dart';
 import '../providers/login_button_controller.dart';
 import '../providers/password_textfield_controller.dart';
 
-class LogIn extends ConsumerWidget {
+class LoginPage extends ConsumerStatefulWidget {
+  const LoginPage({super.key});
 
+  @override
+  ConsumerState<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends ConsumerState<LoginPage> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
-  LogIn({super.key});
-  bool temp = false;
+
+  ({bool email, bool password}) enableButtonNotifier =
+      (email: false, password: false);
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    dynamic state = ref.watch(authControllerProvider);
+  void initState() {
+    super.initState();
+
+    email.addListener(
+      () {
+        setState(() {
+          enableButtonNotifier = (
+            email: email.value.text.isNotEmpty,
+            password: password.value.text.isNotEmpty
+          );
+        });
+        print(enableButtonNotifier);
+      },
+    );
+    password.addListener(
+      () {
+        setState(() {
+          enableButtonNotifier = (
+            email: email.value.text.isNotEmpty,
+            password: password.value.text.isNotEmpty
+          );
+        });
+        print(enableButtonNotifier);
+      },
+    );
+  }
+
+  bool temp = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final loginState = ref.watch(loginProvider);
+
+    ref.listen(loginProvider, (_, next) {
+      if (next.value ?? false) {
+        context.pushNamed(Routes.profile);
+      } else if (next.hasError && !next.isLoading) {
+        _buildShowDialog(context);
+      }
+    });
+
     bool loginButtonState = ref.watch(loginButtonControllerProvider);
-    bool emailState = ref.watch(emailControllerProvider);
-    bool passwordState = ref.watch(passwordControllerProvider);
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Stack(
+          title: const Stack(
             children: [AppbarTittle('Log In to Authy'), Underline(right: 77)],
           ),
           centerTitle: true,
@@ -47,11 +94,12 @@ class LogIn extends ConsumerWidget {
             child: Center(
               child: Column(
                 children: [
-                  SizedBox(height: 45),
-                  CustomWelcomeText('Welcome back! Sign in using your social'),
-                  CustomWelcomeText('account or email to continue us'),
-                  SizedBox(height: 30),
-                  Row(
+                  const SizedBox(height: 45),
+                  const CustomWelcomeText(
+                      'Welcome back! Sign in using your social'),
+                  const CustomWelcomeText('account or email to continue us'),
+                  const SizedBox(height: 30),
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CircularTile(imagePath: 'Assets/Images/facebook.png'),
@@ -61,15 +109,17 @@ class LogIn extends ConsumerWidget {
                       CircularTile(imagePath: 'Assets/Images/apple.png'),
                     ],
                   ),
-                  SizedBox(height: 55),
+                  const SizedBox(height: 55),
                   Padding(
                     padding: const EdgeInsets.only(left: 24, right: 24),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                            height: 1, width: 150, color: Color(0xFFCDD1D0)),
-                        Text(
+                            height: 1,
+                            width: 150,
+                            color: const Color(0xFFCDD1D0)),
+                        const Text(
                           'OR',
                           style: TextStyle(
                             fontFamily: FontFamily.circular,
@@ -79,34 +129,40 @@ class LogIn extends ConsumerWidget {
                         Container(
                           height: 1,
                           width: 150,
-                          color: Color(0xFFCDD1D0),
+                          color: const Color(0xFFCDD1D0),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.only(left: 24, right: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomText('Email'),
+                        const CustomText('Email'),
                         CustomTextField(
                           controller: email,
                           hintText: 'Enter your email',
                           onChanged: (value) {
                             ref.read(emailControllerProvider.notifier).update();
-                            ref.read(loginButtonControllerProvider.notifier).update();
+                            ref
+                                .read(loginButtonControllerProvider.notifier)
+                                .update();
                           },
                         ),
-                        SizedBox(height: 20),
-                        CustomText('Password'),
+                        const SizedBox(height: 20),
+                        const CustomText('Password'),
                         CustomPasswordField(
                           controller: password,
                           hintText: 'Enter your password',
-                          onChanged: (value){
-                            ref.read(passwordControllerProvider.notifier).update();
-                            ref.read(loginButtonControllerProvider.notifier).update();
+                          onChanged: (value) {
+                            ref
+                                .read(passwordControllerProvider.notifier)
+                                .update();
+                            ref
+                                .read(loginButtonControllerProvider.notifier)
+                                .update();
                           },
                         ),
                       ],
@@ -125,56 +181,62 @@ class LogIn extends ConsumerWidget {
                                 value: false,
                                 onChanged: (newValue) {},
                               ),
-                              CustomText('Remember Me'),
+                              const CustomText('Remember Me'),
                             ],
                           ),
                         ),
                         TextButton(
                           onPressed: () {
-                            //context.go("/forgetPassword");
-                            GoRouter.of(context).pushNamed(Routes.forgetPassword);
+                            GoRouter.of(context)
+                                .pushNamed(Routes.forgetPassword);
                           },
-                          child: CustomText('Forget Passwordd'),
+                          child: const CustomText('Forget Password'),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 115),
+                  const SizedBox(height: 115),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.only(left: 24, right: 24),
+                    padding: const EdgeInsets.only(left: 24, right: 24),
                     child: ElevatedButton(
-                        onPressed: loginButtonState
-                            ? () {
-                          ref.read(authControllerProvider.notifier).signIn(
-                              email.text.toString(),
-                              password.text.toString(),
-                              context);
-                        }: null,
-                      child:
-                      (state?.runtimeType.toString() == 'AsyncLoading<dynamic>')
-                          ? const CircularProgressIndicator(
-                          backgroundColor: Colors.white)
-                          : Text(
-                        'Login',
-                        style: const TextStyle(color: Color(0xFF797C7B)),
+                      onPressed: (enableButtonNotifier.email &&
+                              enableButtonNotifier.password)
+                          ? () => ref.read(loginProvider.notifier).signIn(
+                                email: email.text.toString(),
+                                password: password.text.toString(),
+                              )
+                          : null,
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          (enableButtonNotifier.email &&
+                                  enableButtonNotifier.password)
+                              ? const Color(0xFF24786D)
+                              : const Color(0xFFD0CCC1),
+                        ),
+                        minimumSize: const WidgetStatePropertyAll(
+                            Size(double.infinity, 50)),
                       ),
-                    style:ButtonStyle(
-                    backgroundColor: WidgetStatePropertyAll(
-                        loginButtonState?Color(0xFF24786D):Color(0xFFD0CCC1),
+                      child: loginState.isLoading
+                          ? const CircularProgressIndicator(
+                              backgroundColor: Colors.white)
+                          : (enableButtonNotifier.email &&
+                                  enableButtonNotifier.password)
+                              ? const Text(
+                                  'Login',
+                                  style: TextStyle(color: Color(0xFFFFFFFF)),
+                                )
+                              : const Text(
+                                  'Login',
+                                  style: TextStyle(color: Color(0xFF797C7B)),
+                                ),
+                    ),
                   ),
-              minimumSize: WidgetStatePropertyAll(
-                Size(double.infinity, 50),
-              ),
-            ),
-                    )
-                  ),
-
                   TextButton(
                     onPressed: () {
                       GoRouter.of(context).pushNamed(Routes.signup);
                     },
-                    child: CustomText("Don't  have an account?Sign Up"),
+                    child: const CustomText("Don't  have an account?Sign Up"),
                   ),
                 ],
               ),
@@ -182,6 +244,26 @@ class LogIn extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Future<dynamic> _buildShowDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error! Bad request.'),
+          content: const Text('Invalid Email or Password'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
