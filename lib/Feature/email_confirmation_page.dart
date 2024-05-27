@@ -6,6 +6,7 @@ import 'package:first_app/core/widgets/custom_text_filed.dart';
 import 'package:first_app/core/widgets/custom_welcome_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart';
 
@@ -13,69 +14,32 @@ import '../core/widgets/custom_button.dart';
 import '../core/widgets/custom_text.dart';
 import '../core/widgets/custom_underline.dart';
 import '../core/gen/fonts.gen.dart';
+import '../providers/auth_controller.dart';
+import '../providers/email_textfield_controller.dart';
+import '../providers/otp_field_controller.dart';
 
-class EmailConfirmation extends StatefulWidget {
+class EmailConfirmation extends ConsumerWidget {
   final String email;
   final String pageSelector;
   EmailConfirmation(
       {super.key, required this.email, required this.pageSelector});
 
-  @override
-  State<EmailConfirmation> createState() => _EmailConfirmationState();
-}
-
-class _EmailConfirmationState extends State<EmailConfirmation> {
   TextEditingController code = TextEditingController();
-  Timer? _timer;
-  int _countDown = 10;
-  bool canResend = false;
-  String userCode = '';
-  @override
-  void initState() {
-    super.initState();
-    startTimer();
-  }
+
 
   @override
-  void dispose() {
-    super.dispose();
-    _timer!.cancel();
-  }
-
-  void startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_countDown > 0) {
-          _countDown--;
-        } else {
-          _timer?.cancel();
-          canResend = true;
-        }
-      });
-    });
-  }
-
-  void resendOtp() {
-    if (canResend == true) {
-      setState(() {
-        _countDown = 10;
-        canResend = false;
-      });
-      startTimer();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    dynamic state = ref.watch(authControllerProvider);
+    bool otpState = ref.watch(otpControllerProvider);
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              if (widget.pageSelector == "signUp") {
+              if (pageSelector == "signUp") {
                 context.go("/signUp");
-              } else if (widget.pageSelector == "forgetPassword") {
+              } else if (pageSelector == "forgetPassword") {
                 context.go("/forgetPassword");
               }
             },
@@ -105,105 +69,41 @@ class _EmailConfirmationState extends State<EmailConfirmation> {
                         CustomTextField(
                           hintText: '',
                           controller: code,
-                          onChanged: (value) {
-                            setState(() {
-                              userCode = value;
-                            });
-                          },
+                            onChanged: (value) {
+                              ref.read(otpControllerProvider.notifier).update();
+                              print(otpState);
+                            }
                         ),
                       ],
                     ),
                   ),
                   SizedBox(height: 350),
                   ElevatedButton(
-                    onPressed: userCode != '' ? buttonCall : null,
-                    child: Text(
+                    onPressed: otpState? () {
+                      ref.read(authControllerProvider.notifier).emailConfirmation(
+                          email,
+                          code.text.toString(),
+                          pageSelector,
+                          context);
+                    }:null,
+                    child: (state?.runtimeType.toString() == 'AsyncLoading<dynamic>')
+                        ? const CircularProgressIndicator(
+                        backgroundColor: Colors.white)
+                        : Text(
                       'Submit',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: FontFamily.circular,
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
-                        color: Color(0xFFFFFFFF),
+                        color: Color(0xFF797C7B),
                       ),
                     ),
-                    style: userCode != ''
-                        ? ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              Color(0xFF24786D),
-                            ),
-                          )
-                        : ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              Color(0xFFD0CCC1),
-                            ),
-                          ),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        otpState?Color(0xFF24786D):Color(0xFFD0CCC1),
+                      ),
+                    ),
                   ),
-                  if (_countDown > 0)
-                    CustomText(
-                      "Resend Email in ${_countDown.toString()} seconds",
-                    ),
-                  if (_countDown == 0)
-                    TextButton(
-                      onPressed: () async {
-                        try {
-                          Response response = await post(
-                            Uri.parse(
-                                'http://34.72.136.54:4067/api/v1/auth/resend-otp'),
-                            body: {
-                              'email': widget.email,
-                            },
-                          );
-                          print(response.statusCode);
-                          if (response.statusCode == 201) {
-                            print('Resend OTP successfully');
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Resend OTP successfully!'),
-                                  content: Text('Check your inbox'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        resendOtp();
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          } else if (response.statusCode == 409) {
-                            print('Already account created.Login');
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title:
-                                      Text('User already exist. Please Login'),
-                                  content:
-                                      Text('Failed to create new account.'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          } else {
-                            print('Wrong OTP');
-                          }
-                        } catch (e) {
-                          print(e.toString());
-                        }
-                      },
-                      child: CustomText("Resend Email"),
-                    ),
                 ],
               ),
             ),
@@ -213,63 +113,63 @@ class _EmailConfirmationState extends State<EmailConfirmation> {
     );
   }
 
-  void buttonCall() async {
-    try {
-      Response response = await post(
-        Uri.parse('http://34.72.136.54:4067/api/v1/auth/verifyOtp'),
-        body: {
-          'email': widget.email,
-          'otp': code.text.toString(),
-        },
-      );
-      print(response.statusCode);
-      if (response.statusCode == 201) {
-        print('OTP varrified successfully');
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Email verification successful'),
-              content: Text('Press OK'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    if (widget.pageSelector == "signUp") {
-                      context.go('/');
-                    } else if (widget.pageSelector == "forgetPassword") {
-                      context.go('/resetPassword/${widget.email}');
-                    }
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      } else if (response.statusCode == 409) {
-        print('Already account created.Login');
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('User already exist. Please Login'),
-              content: Text('Failed to create new account.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        print('Wrong OTP');
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  // void buttonCall() async {
+  //   try {
+  //     Response response = await post(
+  //       Uri.parse('http://34.72.136.54:4067/api/v1/auth/verifyOtp'),
+  //       body: {
+  //         'email': widget.email,
+  //         'otp': code.text.toString(),
+  //       },
+  //     );
+  //     print(response.statusCode);
+  //     if (response.statusCode == 201) {
+  //       print('OTP varrified successfully');
+  //       showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return AlertDialog(
+  //             title: Text('Email verification successful'),
+  //             content: Text('Press OK'),
+  //             actions: [
+  //               TextButton(
+  //                 onPressed: () {
+  //                   if (widget.pageSelector == "signUp") {
+  //                     context.go('/');
+  //                   } else if (widget.pageSelector == "forgetPassword") {
+  //                     context.go('/resetPassword/${widget.email}');
+  //                   }
+  //                 },
+  //                 child: Text('OK'),
+  //               ),
+  //             ],
+  //           );
+  //         },
+  //       );
+  //     } else if (response.statusCode == 409) {
+  //       print('Already account created.Login');
+  //       showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return AlertDialog(
+  //             title: Text('User already exist. Please Login'),
+  //             content: Text('Failed to create new account.'),
+  //             actions: [
+  //               TextButton(
+  //                 onPressed: () {
+  //                   Navigator.of(context).pop();
+  //                 },
+  //                 child: Text('OK'),
+  //               ),
+  //             ],
+  //           );
+  //         },
+  //       );
+  //     } else {
+  //       print('Wrong OTP');
+  //     }
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 }

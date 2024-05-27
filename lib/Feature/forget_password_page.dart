@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart';
 import '../core/gen/fonts.gen.dart';
@@ -9,17 +10,18 @@ import '../core/widgets/custom_text.dart';
 import '../core/widgets/custom_text_filed.dart';
 import '../core/widgets/custom_underline.dart';
 import '../core/widgets/custom_welcome_text.dart';
+import '../providers/auth_controller.dart';
+import '../providers/email_textfield_controller.dart';
 
-void main() {
-  runApp(ForgetPassword());
-}
 
-class ForgetPassword extends StatelessWidget {
+class ForgetPassword extends ConsumerWidget {
   ForgetPassword({super.key});
   TextEditingController email = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    dynamic state = ref.watch(authControllerProvider);
+    bool emailState = ref.watch(emailControllerProvider);
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -56,6 +58,9 @@ class ForgetPassword extends StatelessWidget {
                         CustomTextField(
                           hintText: 'Enter your email',
                           controller: email,
+                            onChanged: (value) {
+                              ref.read(emailControllerProvider.notifier).update();
+                            }
                         ),
                       ],
                     ),
@@ -65,59 +70,26 @@ class ForgetPassword extends StatelessWidget {
                     width: double.infinity,
                     padding: EdgeInsets.only(left: 35, right: 35),
                     child: ElevatedButton(
-                      onPressed: () async {
-                        try {
-                          Response response = await post(
-                            Uri.parse(
-                                'http://34.72.136.54:4067/api/v1/auth/forget-password'),
-                            body: {
-                              'email': email.text.toString(),
-                            },
-                          );
-                          print(response.statusCode);
-                          if (response.statusCode == 201 ||
-                              response.statusCode == 200) {
-                            String? Email = email.text.toString();
-                            String pageSelector = "forgetPassword";
-                            print('OTP sent successfully');
-                            context
-                                .go('/emailConfirmation/$Email/$pageSelector');
-                          } else {
-                            print('failed');
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Error! Bad request.'),
-                                  content: Text('Invalid Email or Password'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        } catch (e) {
-                          print(e.toString());
-                        }
-                      },
-                      child: Text(
+                      onPressed: emailState? () {
+                        ref.read(authControllerProvider.notifier).forgetPassword(
+                            email.text.toString(),
+                            context);
+                      }:null,
+                      child: (state?.runtimeType.toString() == 'AsyncLoading<dynamic>')
+                          ? const CircularProgressIndicator(
+                          backgroundColor: Colors.white)
+                          : Text(
                         'Submit',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: FontFamily.circular,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Color(0xFF797C7B),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              color: Color(0xFF797C7B),
                         ),
                       ),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                          Color(0xFFF3F6F6),
+                            emailState?Color(0xFF24786D):Color(0xFFD0CCC1),
                         ),
                       ),
                     ),

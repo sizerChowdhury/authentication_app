@@ -46,6 +46,98 @@ class authController extends _$authController{
         },
       );
     }
+  }
+
+  dynamic forgetPassword(String email, BuildContext context) async {
+    state = const AsyncLoading();
+    state = await post(
+      Uri.parse('http://34.72.136.54:4067/api/v1/auth/forget-password'),
+      body: {
+        'email': email,
+      },
+    );
+
+    if (state!.statusCode == 201) {
+          String? Email = email;
+          String pageSelector = "forgetPassword";
+          print('OTP sent successfully');
+          context.go('/emailConfirmation/$Email/$pageSelector');
+        } else {
+          print('failed');
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Error! Bad request.'),
+                content: Text('Invalid Email'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+  }
+
+  dynamic emailConfirmation(String email,String otp,String pageSelector, BuildContext context) async {
+    state = const AsyncLoading();
+    state = await post(
+      Uri.parse('http://34.72.136.54:4067/api/v1/auth/verifyOtp'),
+      body: {
+        'email': email,
+        'otp': otp,
+      },
+    );
+
+    if (state!.statusCode == 201) {
+            print('OTP varrified successfully');
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Email verification successful'),
+                  content: Text('Press OK'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        if (pageSelector == "signUp") {
+                          context.go('/');
+                        } else if (pageSelector == "forgetPassword") {
+                          context.go('/resetPassword/${email}');
+                        }
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          } else {
+            print('Already account created.Login');
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('User already exist. Please Login'),
+                  content: Text('Failed to create new account.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
 
   }
+
 }
