@@ -16,9 +16,6 @@ import '../core/widgets/custom_text.dart';
 import '../core/widgets/custom_underline.dart';
 import '../core/gen/fonts.gen.dart';
 import '../providers/auth_controller.dart';
-import '../providers/email_textfield_controller.dart';
-import '../providers/otp_field_controller.dart';
-
 class EmailConfirmation extends ConsumerStatefulWidget {
   final String email;
   final String pageSelector;

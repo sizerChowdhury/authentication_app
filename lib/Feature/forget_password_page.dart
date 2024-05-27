@@ -11,7 +11,6 @@ import '../core/widgets/custom_text_filed.dart';
 import '../core/widgets/custom_underline.dart';
 import '../core/widgets/custom_welcome_text.dart';
 import '../providers/auth_controller.dart';
-import '../providers/email_textfield_controller.dart';
 
 class ForgetPassword extends ConsumerStatefulWidget {
 

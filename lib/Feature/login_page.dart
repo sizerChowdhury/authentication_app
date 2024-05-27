@@ -17,7 +17,7 @@ import '../core/widgets/custom_text_filed.dart';
 import '../core/widgets/custom_welcome_text.dart';
 import '../core/widgets/custom_underline.dart';
 import '../providers/auth_controller.dart';
-import '../providers/login_button_controller.dart';
+
 
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -68,7 +68,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       }
     });
 
-    bool loginButtonState = ref.watch(loginButtonControllerProvider);
 
     return Scaffold(
         appBar: AppBar(
