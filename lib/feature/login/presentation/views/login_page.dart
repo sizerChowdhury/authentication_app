@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
+import 'package:authentication_app/core/theme/theme.dart';
 
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -66,21 +67,28 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Stack(
-            children: [AppbarTittle('Log In to Authy'), Underline(right: 77)],
-          ),
-          centerTitle: true,
-        ),
+        appBar: AppBar(),
         body: SingleChildScrollView(
           child: SafeArea(
             child: Center(
+
               child: Column(
                 children: [
+                  Stack(
+                    children: [
+                      Text('Log In to Authy',
+                      style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      Underline(right: 77)
+                    ],
+                  ),
                   const SizedBox(height: 45),
-                  const CustomWelcomeText(
-                      'Welcome back! Sign in using your social'),
-                  const CustomWelcomeText('account or email to continue us'),
+                  Text('Welcome back! Sign in using your social',
+                  style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  Text('account or email to continue us',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   const SizedBox(height: 30),
                    Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -138,13 +146,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const CustomText('Email'),
-                        CustomTextField(
+                        Text('Email',
+                        style: Theme.of(context).textTheme.headlineLarge ,
+                        ),
+                        TextField(
+                          decoration:const InputDecoration(
+                            hintText: 'Enter your email',
+                          ),
                           controller: email,
-                          hintText: 'Enter your email',
                         ),
                         const SizedBox(height: 20),
-                        const CustomText('Password'),
+                        Text('Password',
+                          style: Theme.of(context).textTheme.headlineLarge ,
+                        ),
                         CustomPasswordField(
                           controller: password,
                           hintText: 'Enter your password',
@@ -165,7 +179,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 value: false,
                                 onChanged: (newValue) {},
                               ),
-                              const CustomText('Remember Me'),
+                              Text('Remember Me',
+                                style: Theme.of(context).textTheme.headlineLarge ,
+                              ),
                             ],
                           ),
                         ),
@@ -173,7 +189,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           onPressed: () {
                             context.go("/forgetPassword");
                           },
-                          child: const CustomText('Forget Password'),
+                          child: Text('Forget Password',
+                            style: Theme.of(context).textTheme.headlineLarge ,
+                          ),
                         ),
                       ],
                     ),
@@ -190,15 +208,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 password: password.text.toString(),
                               )
                           : null,
-                      style: ButtonStyle(
+                      style: !(enableButtonNotifier.email &
+                      enableButtonNotifier.password)
+                          ? const ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(
-                          (enableButtonNotifier.email &&
-                                  enableButtonNotifier.password)
-                              ? const Color(0xFF24786D)
-                              : const Color(0xFFD0CCC1),
+                          Color(0xFFF3F6F6),
                         ),
-                        minimumSize: const WidgetStatePropertyAll(
-                            Size(double.infinity, 50)),
+                        minimumSize: WidgetStatePropertyAll(
+                          Size(double.infinity, 50),
+                        ),
+                      )
+                          : const ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          Color.fromARGB(255, 97, 145, 122),
+                        ),
+                        minimumSize: WidgetStatePropertyAll(
+                          Size(double.infinity, 50),
+                        ),
                       ),
                       child: loginState.isLoading
                           ? const CircularProgressIndicator(
@@ -219,7 +245,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     onPressed: () {
                       GoRouter.of(context).pushNamed(Routes.signup);
                     },
-                    child: const CustomText("Don't  have an account?Sign Up"),
+                    child: Text("Don't have an account?Sign up",
+                      style: Theme.of(context).textTheme.headlineLarge ,
+                    ),
                   ),
                 ],
               ),
