@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:first_app/core/gen/fonts.gen.dart';
+import 'package:authentication_app/core/gen/fonts.gen.dart';
 
 class CustomButton extends StatelessWidget {
   final String buttonText;

@@ -1,6 +1,5 @@
-//import 'package:first_app/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:first_app/core/gen/fonts.gen.dart';
+import 'package:authentication_app/core/gen/fonts.gen.dart';
 
 class AppbarTittle extends StatelessWidget {
   final String text;
