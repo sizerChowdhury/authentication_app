@@ -12,7 +12,7 @@ class EmailConfirmation extends _$EmailConfirmation {
   async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      return EmailConfirmationRepository().EmailConfirmation(email, otp);
+      return EmailConfirmationRepository().emailConfirmation(email, otp);
     });
   }
 }

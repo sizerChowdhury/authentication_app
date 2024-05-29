@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:http/http.dart';
 
 class SignupRepository {
-  FutureOr<bool?> SignUp(
+  FutureOr<bool?> signUp(
       String firstname,String lastname,String email, String password
       ) async{
     final response = await post(

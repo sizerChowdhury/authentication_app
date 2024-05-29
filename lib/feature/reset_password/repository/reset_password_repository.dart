@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:http/http.dart';
 class ResetPasswordRepository {
-  FutureOr<bool?> ResetPassword(String email, String password,
+  FutureOr<bool?> resetPassword(String email, String password,
       String confirmPassword) async{
     final response = await post(
       Uri.parse(

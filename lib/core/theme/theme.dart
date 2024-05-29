@@ -4,6 +4,12 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static ThemeData getAppTheme() {
     return ThemeData(
+      colorScheme: const ColorScheme.light(
+        primary: Color(0xFF24786D),
+        secondary: Color(0xFF797C7B),
+        surface: Colors.white,
+        tertiary: Color.fromARGB(255, 81, 81, 81),
+      ),
       textTheme: TextTheme(
         headlineLarge: TextStyle(
           fontFamily: FontFamily.circular,
@@ -48,6 +54,7 @@ class AppTheme {
           ),
         ),
       ),
+
     );
   }
 }

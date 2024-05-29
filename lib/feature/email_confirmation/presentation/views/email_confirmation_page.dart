@@ -1,26 +1,22 @@
 import 'dart:async';
-import 'package:authentication_app/core/widgets/appbar_tittle.dart';
-import 'package:authentication_app/core/widgets/custom_text.dart';
-import 'package:authentication_app/core/widgets/custom_text_filed.dart';
-import 'package:authentication_app/core/widgets/custom_underline.dart';
-import 'package:authentication_app/core/widgets/custom_welcome_text.dart';
+import 'package:authentication_app/core/widgets/title_underline.dart';
 import 'package:authentication_app/feature/email_confirmation/controller/email_confirmation_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class EmailConfirmation extends ConsumerStatefulWidget {
+class EmailConfirmationPage extends ConsumerStatefulWidget {
   final String email;
   final String pageSelector;
-  EmailConfirmation(
-  {super.key, required this.email, required this.pageSelector});
+  const EmailConfirmationPage(
+  {super.key, required this.email, required this.pageSelector,});
 
   @override
-  ConsumerState<EmailConfirmation> createState() => _EmailConfirmationState();
+  ConsumerState<EmailConfirmationPage> createState()
+  => _EmailConfirmationPageState();
 }
 
-class _EmailConfirmationState extends ConsumerState<EmailConfirmation> {
+class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
   TextEditingController otp = TextEditingController();
 
   ({bool otp}) enableButtonNotifier = (otp: false);
@@ -40,7 +36,6 @@ class _EmailConfirmationState extends ConsumerState<EmailConfirmation> {
       otp: otp.value.text.isNotEmpty,
       );
     });
-    print(enableButtonNotifier);
   }
 
   @override
@@ -49,13 +44,12 @@ class _EmailConfirmationState extends ConsumerState<EmailConfirmation> {
 
     ref.listen(emailConfirmationProvider, (_, next) {
       if (next.value ?? false) {
-        print('OTP varrified successfully');
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Email verification successful'),
-                    content: Text('Press OK'),
+                    title: const Text('Email verification successful'),
+                    content: const Text('Press OK'),
                     actions: [
                       TextButton(
                         onPressed: () {
@@ -65,7 +59,7 @@ class _EmailConfirmationState extends ConsumerState<EmailConfirmation> {
                             context.go('/resetPassword/${widget.email}');
                           }
                         },
-                        child: Text('OK'),
+                        child: const Text('OK'),
                       ),
                     ],
                   );
@@ -77,32 +71,41 @@ class _EmailConfirmationState extends ConsumerState<EmailConfirmation> {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Stack(
-          children: [AppbarTittle('Email Confirmation'), Underline(right: 77)],
-        ),
-        centerTitle: true,
-      ),
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Center(
             child: Column(
               children: [
+                Stack(
+                  children: [
+                    Text('Email Confirmation',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const Underline(right: 77)
+                  ],
+                ),
                 const SizedBox(height: 45),
-                const CustomWelcomeText(
-                    "We've sent a code to your email address"),
-                const CustomWelcomeText('Please check your inbox'),
+                Text("We've sent a code to your email address",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                Text('Please check your inbox',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 100),
-
                 Padding(
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const CustomText('Your code'),
-                      CustomTextField(
+                      Text('Your code',
+                        style: Theme.of(context).textTheme.headlineLarge ,
+                      ),
+                      TextField(
+                        decoration:const InputDecoration(
+                          hintText: '',
+                        ),
                         controller: otp,
-                        hintText: '',
                       ),
                     ],
                   ),
@@ -119,14 +122,21 @@ class _EmailConfirmationState extends ConsumerState<EmailConfirmation> {
                       otp: otp.text.toString(),
                     )
                         : null,
-                    style: ButtonStyle(
+                    style: !(enableButtonNotifier.otp)
+                        ? const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(
-                        (enableButtonNotifier.otp)
-                            ? const Color(0xFF24786D)
-                            : const Color(0xFFD0CCC1),
+                        Color(0xFFF3F6F6),
                       ),
-                      minimumSize: const WidgetStatePropertyAll(
-                          Size(double.infinity, 50)),
+                      minimumSize: WidgetStatePropertyAll(
+                        Size(double.infinity, 50),
+                      ),
+                    ) : const ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(
+                        Color.fromARGB(255, 97, 145, 122),
+                      ),
+                      minimumSize: WidgetStatePropertyAll(
+                        Size(double.infinity, 50),
+                      ),
                     ),
                     child: loginState.isLoading
                         ? const CircularProgressIndicator(
@@ -153,20 +163,20 @@ class _EmailConfirmationState extends ConsumerState<EmailConfirmation> {
   Future<dynamic> _buildShowDialog(BuildContext context) {
     return showDialog(
       context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('User already exist. Please Login'),
-                  content: Text('Failed to create new account.'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('User already exist. Please Login'),
+          content: const Text('Failed to create new account.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
                       },
-                      child: Text('OK'),
-                    ),
-                  ],
-                );
-              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+        },
     );
   }
 }

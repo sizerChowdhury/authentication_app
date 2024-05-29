@@ -14,7 +14,7 @@ class ResetPassword extends _$ResetPassword {
 }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      return ResetPasswordRepository().ResetPassword(email, password, confirmPassword);
+      return ResetPasswordRepository().resetPassword(email, password, confirmPassword);
     });
   }
 }

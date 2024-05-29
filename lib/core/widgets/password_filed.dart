@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:authentication_app/core/gen/fonts.gen.dart';
 
-class CustomTextField extends StatefulWidget {
+class PasswordField extends StatefulWidget {
+  final TextEditingController controller;
   final String hintText;
-  //final bool obscureText;
-  final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
-
-  const CustomTextField({
-    Key? key,
+  const PasswordField({
+    super.key,
+    required this.controller,
     required this.hintText,
-    //this.obscureText = false,
-    this.controller,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
+  _PasswordFieldState createState() => _PasswordFieldState();
 }
 
-class _CustomTextFieldState extends State<CustomTextField> {
+class _PasswordFieldState extends State<PasswordField> {
+  bool _isSecurePassword = true;
+
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: widget.controller,
       onChanged: widget.onChanged,
-      //obscureText: obscureText,
+      obscureText: _isSecurePassword,
       decoration: InputDecoration(
         hintText: widget.hintText,
         hintStyle: TextStyle(
@@ -41,6 +40,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
           borderSide: BorderSide(
             color: Color(0xFF24786D),
           ),
+        ),
+        suffixIcon: IconButton(
+          onPressed: () {
+            setState(() {
+              _isSecurePassword = !_isSecurePassword;
+            });
+          },
+          icon: _isSecurePassword
+              ? Icon(Icons.visibility)
+              : Icon(Icons.visibility_off),
         ),
       ),
     );

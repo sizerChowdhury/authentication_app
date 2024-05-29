@@ -11,7 +11,7 @@ class Login extends _$Login {
   void signIn({required String email, required String password}) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      return LoginRepository().LogIn(email, password);
+      return LoginRepository().logIn(email, password);
     });
   }
 }

@@ -1,26 +1,20 @@
-
-import 'package:authentication_app/core/widgets/appbar_tittle.dart';
-import 'package:authentication_app/core/widgets/custom_text.dart';
-import 'package:authentication_app/core/widgets/custom_text_filed.dart';
-import 'package:authentication_app/core/widgets/custom_underline.dart';
-import 'package:authentication_app/core/widgets/custom_welcome_text.dart';
+import 'package:authentication_app/core/widgets/title_underline.dart';
 import 'package:authentication_app/feature/forget_password/controller/forget_password_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 
-class ForgetPassword extends ConsumerStatefulWidget {
+class ForgetPasswordPage extends ConsumerStatefulWidget {
 
-  ForgetPassword(
-      {super.key});
+  const ForgetPasswordPage(
+      {super.key,});
 
   @override
-  ConsumerState<ForgetPassword> createState() => _ForgetPasswordStae();
+  ConsumerState<ForgetPasswordPage> createState() => _ForgetPasswordPageState();
 }
 
-class _ForgetPasswordStae extends ConsumerState<ForgetPassword> {
+class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
   TextEditingController email = TextEditingController();
 
   ({bool email}) enableButtonNotifier = (email: false);
@@ -33,14 +27,14 @@ class _ForgetPasswordStae extends ConsumerState<ForgetPassword> {
           () => updateEnableButtonNotifier(),
     );
   }
-
+  bool isButtonEnable = false;
   void updateEnableButtonNotifier() {
     setState(() {
       enableButtonNotifier = (
       email: email.value.text.isNotEmpty,
       );
+      isButtonEnable = enableButtonNotifier.email;
     });
-    print(enableButtonNotifier);
   }
 
   @override
@@ -49,31 +43,36 @@ class _ForgetPasswordStae extends ConsumerState<ForgetPassword> {
 
     ref.listen(forgetPasswordProvider, (_, next) {
       if (next.value ?? false) {
-        String? Email = email.text.toString();
+        String? emailController = email.text.toString();
         String pageSelector = "forgetPassword";
-        print('OTP sent successfully');
-        context.go('/emailConfirmation/$Email/$pageSelector');
+        context.go('/emailConfirmation/$emailController/$pageSelector');
       } else if (next.hasError && !next.isLoading) {
         _buildShowDialog(context);
       }
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Stack(
-          children: [AppbarTittle('Forgot Password'), Underline(right: 77)],
-        ),
-        centerTitle: true,
-      ),
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Center(
             child: Column(
               children: [
+                Stack(
+                  children: [
+                    Text('Forgot Password',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const Underline(right: 77)
+                  ],
+                ),
                 const SizedBox(height: 45),
-                const CustomWelcomeText(
-                    "Enter your email address. We will send a code"),
-                const CustomWelcomeText('to verify your identity'),
+                Text('Enter your email address. We will send a code',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                Text('to verify your identity',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 100),
 
                 Padding(
@@ -81,10 +80,14 @@ class _ForgetPasswordStae extends ConsumerState<ForgetPassword> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const CustomText('Your email'),
-                      CustomTextField(
+                      Text('Your email',
+                        style: Theme.of(context).textTheme.headlineLarge ,
+                      ),
+                      TextField(
+                        decoration:const InputDecoration(
+                          hintText: 'Enter your email',
+                        ),
                         controller: email,
-                        hintText: 'Enter your email',
                       ),
                     ],
                   ),
@@ -94,25 +97,32 @@ class _ForgetPasswordStae extends ConsumerState<ForgetPassword> {
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: ElevatedButton(
-                    onPressed: (enableButtonNotifier.email)
+                    onPressed: (isButtonEnable)
                         ? () => ref.read(forgetPasswordProvider.notifier).
                     otpConfirmation(
                       email: email.text.toString(),
                     )
                         : null,
-                    style: ButtonStyle(
+                    style: !(isButtonEnable)
+                        ? const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(
-                        (enableButtonNotifier.email)
-                            ? const Color(0xFF24786D)
-                            : const Color(0xFFD0CCC1),
+                        Color(0xFFF3F6F6),
                       ),
-                      minimumSize: const WidgetStatePropertyAll(
-                          Size(double.infinity, 50)),
+                      minimumSize: WidgetStatePropertyAll(
+                        Size(double.infinity, 50),
+                      ),
+                    ) : const ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(
+                        Color.fromARGB(255, 97, 145, 122),
+                      ),
+                      minimumSize: WidgetStatePropertyAll(
+                        Size(double.infinity, 50),
+                      ),
                     ),
                     child: loginState.isLoading
                         ? const CircularProgressIndicator(
                         backgroundColor: Colors.white)
-                        : (enableButtonNotifier.email)
+                        : (isButtonEnable)
                         ? const Text(
                       'Submit',
                       style: TextStyle(color: Color(0xFFFFFFFF)),
@@ -136,14 +146,14 @@ class _ForgetPasswordStae extends ConsumerState<ForgetPassword> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Error! Bad request.'),
-          content: Text('Invalid Email'),
+          title: const Text('Error! Bad request.'),
+          content: const Text('Invalid Email'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );

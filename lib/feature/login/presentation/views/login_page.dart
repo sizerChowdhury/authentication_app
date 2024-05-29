@@ -1,20 +1,15 @@
 import 'package:authentication_app/core/gen/assets.gen.dart';
 import 'package:authentication_app/core/navigation/routes/routes_name.dart';
-import 'package:authentication_app/core/widgets/appbar_tittle.dart';
 import 'package:authentication_app/core/gen/fonts.gen.dart';
-import 'package:authentication_app/core/widgets/circular_tile.dart';
-import 'package:authentication_app/core/widgets/custom_password_filed.dart';
-import 'package:authentication_app/core/widgets/custom_text.dart';
-import 'package:authentication_app/core/widgets/custom_text_filed.dart';
-import 'package:authentication_app/core/widgets/custom_underline.dart';
-import 'package:authentication_app/core/widgets/custom_welcome_text.dart';
+import 'package:authentication_app/feature/login/presentation/widgets/circular_tile.dart';
+import 'package:authentication_app/core/widgets/password_filed.dart';
+import 'package:authentication_app/core/widgets/title_underline.dart';
 import 'package:authentication_app/feature/login/controller/login_controller.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
-import 'package:authentication_app/core/theme/theme.dart';
+
 
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -42,6 +37,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       () => updateEnableButtonNotifier(),
     );
   }
+  bool isButtonEnable = false;
 
   void updateEnableButtonNotifier() {
     setState(() {
@@ -49,8 +45,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         email: email.value.text.isNotEmpty,
         password: password.value.text.isNotEmpty
       );
+      isButtonEnable = enableButtonNotifier.email &&
+          enableButtonNotifier.password;
     });
-    print(enableButtonNotifier);
   }
 
   @override
@@ -59,7 +56,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     ref.listen(loginProvider, (_, next) {
       if (next.value ?? false) {
-        context.pushNamed(Routes.profile);
+        context.pushNamed(Routes.home);
       } else if (next.hasError && !next.isLoading) {
         _buildShowDialog(context);
       }
@@ -79,7 +76,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       Text('Log In to Authy',
                       style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      Underline(right: 77)
+                      const Underline(right: 77)
                     ],
                   ),
                   const SizedBox(height: 45),
@@ -99,14 +96,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             height: 25,
                             width: 25,
                           )),
-                      SizedBox(width: 22),
+                      const SizedBox(width: 22),
                       LoginPageLogo(
                           logo: Image(
                             image: Assets.assets.images.google.provider(),
                             height: 25,
                             width: 25,
                           )),
-                      SizedBox(width: 22),
+                      const SizedBox(width: 22),
                       LoginPageLogo(
                           logo: Image(
                             image: Assets.assets.images.apple.provider(),
@@ -159,7 +156,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         Text('Password',
                           style: Theme.of(context).textTheme.headlineLarge ,
                         ),
-                        CustomPasswordField(
+                        PasswordField(
                           controller: password,
                           hintText: 'Enter your password',
                         ),
@@ -201,15 +198,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     width: double.infinity,
                     padding: const EdgeInsets.only(left: 24, right: 24),
                     child: ElevatedButton(
-                      onPressed: (enableButtonNotifier.email &&
-                              enableButtonNotifier.password)
+                      onPressed: (isButtonEnable)
                           ? () => ref.read(loginProvider.notifier).signIn(
                                 email: email.text.toString(),
                                 password: password.text.toString(),
                               )
                           : null,
-                      style: !(enableButtonNotifier.email &
-                      enableButtonNotifier.password)
+                      style: !(isButtonEnable)
                           ? const ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(
                           Color(0xFFF3F6F6),
@@ -217,8 +212,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         minimumSize: WidgetStatePropertyAll(
                           Size(double.infinity, 50),
                         ),
-                      )
-                          : const ButtonStyle(
+                      ) : const ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(
                           Color.fromARGB(255, 97, 145, 122),
                         ),
@@ -229,8 +223,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       child: loginState.isLoading
                           ? const CircularProgressIndicator(
                               backgroundColor: Colors.white)
-                          : (enableButtonNotifier.email &&
-                                  enableButtonNotifier.password)
+                          : (isButtonEnable)
                               ? const Text(
                                   'Login',
                                   style: TextStyle(color: Color(0xFFFFFFFF)),

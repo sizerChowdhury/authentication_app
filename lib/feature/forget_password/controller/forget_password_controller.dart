@@ -12,7 +12,7 @@ class ForgetPassword extends _$ForgetPassword {
   async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      return ForgetPasswordRepository().ForgetPassword(email);
+      return ForgetPasswordRepository().forgetPassword(email);
     });
   }
 }

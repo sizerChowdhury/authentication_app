@@ -1,25 +1,21 @@
-import 'package:authentication_app/core/widgets/appbar_tittle.dart';
-import 'package:authentication_app/core/widgets/custom_password_filed.dart';
-import 'package:authentication_app/core/widgets/custom_text.dart';
-import 'package:authentication_app/core/widgets/custom_underline.dart';
-import 'package:authentication_app/core/widgets/custom_welcome_text.dart';
+import 'package:authentication_app/core/widgets/password_filed.dart';
+import 'package:authentication_app/core/widgets/title_underline.dart';
 import 'package:authentication_app/feature/reset_password/controller/reset_password_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 
-class ResetPassword extends ConsumerStatefulWidget {
+class ResetPasswordPage extends ConsumerStatefulWidget {
   final String email;
   final String previousPage = "forgetPassword";
-  ResetPassword({super.key, required this.email});
+  const ResetPasswordPage({super.key, required this.email});
 
   @override
-  ConsumerState<ResetPassword> createState() => _ResetPasswordState();
+  ConsumerState<ResetPasswordPage> createState() => _ResetPasswordPageState();
 }
 
-class _ResetPasswordState extends ConsumerState<ResetPassword> {
+class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   TextEditingController password = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
 
@@ -36,15 +32,15 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
           () => updateEnableButtonNotifier(),
     );
   }
-
+  bool isButtonEnable = false;
   void updateEnableButtonNotifier() {
     setState(() {
       enableButtonNotifier = (
       password: password.value.text.isNotEmpty,
       confirmPassword: confirmPassword.value.text.isNotEmpty
       );
+      isButtonEnable = enableButtonNotifier.password && enableButtonNotifier.confirmPassword;
     });
-    print(enableButtonNotifier);
   }
 
   @override
@@ -53,19 +49,18 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
 
     ref.listen(resetPasswordProvider, (_, next) {
       if (next.value ?? false) {
-        print('password changed successfully');
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('Password Reset successfully!'),
-                                  content: Text('Press OK and logIn.'),
+                                  title: const Text('Password Reset successfully!'),
+                                  content: const Text('Press OK and logIn.'),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
                                         context.go('/');
                                       },
-                                      child: Text('OK'),
+                                      child: const Text('OK'),
                                     ),
                                   ],
                                 );
@@ -77,21 +72,27 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Stack(
-          children: [AppbarTittle('Email Confirmation'), Underline(right: 77)],
-        ),
-        centerTitle: true,
-      ),
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Center(
             child: Column(
               children: [
+                Stack(
+                  children: [
+                    Text('Forget Passwordd',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const Underline(right: 77)
+                  ],
+                ),
                 const SizedBox(height: 45),
-                const CustomWelcomeText(
-                    "Please enter a new password. Don't enter"),
-                const CustomWelcomeText('your old password'),
+                Text("Please enter a new password. Don't enter",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                Text('your old password',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 100),
 
                 Padding(
@@ -99,14 +100,18 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomText('Password'),
-                        CustomPasswordField(
+                        Text('Password',
+                        style: Theme.of(context).textTheme.headlineLarge ,
+                        ),
+                        PasswordField(
                           controller: password,
                           hintText: '',
                         ),
-                        SizedBox(height: 20),
-                        CustomText('Confirm Password'),
-                        CustomPasswordField(
+                        const SizedBox(height: 20),
+                        Text('Confirm Password',
+                        style: Theme.of(context).textTheme.headlineLarge ,
+                        ),
+                        PasswordField(
                           controller: confirmPassword,
                           hintText: '',
                         ),
@@ -119,7 +124,7 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: ElevatedButton(
-                    onPressed: (enableButtonNotifier.password && enableButtonNotifier.confirmPassword)
+                    onPressed: (isButtonEnable)
                         ? () => ref.read(resetPasswordProvider.notifier).
                     resetPassword(
                       email: widget.email,
@@ -127,19 +132,26 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
                       confirmPassword: confirmPassword.text.toString()
                     )
                         : null,
-                    style: ButtonStyle(
+                    style: !(isButtonEnable)
+                        ? const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(
-                        (enableButtonNotifier.password && enableButtonNotifier.confirmPassword)
-                            ? const Color(0xFF24786D)
-                            : const Color(0xFFD0CCC1),
+                        Color(0xFFF3F6F6),
                       ),
-                      minimumSize: const WidgetStatePropertyAll(
-                          Size(double.infinity, 50)),
+                      minimumSize: WidgetStatePropertyAll(
+                        Size(double.infinity, 50),
+                      ),
+                    ) : const ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(
+                        Color.fromARGB(255, 97, 145, 122),
+                      ),
+                      minimumSize: WidgetStatePropertyAll(
+                        Size(double.infinity, 50),
+                      ),
                     ),
                     child: loginState.isLoading
                         ? const CircularProgressIndicator(
-                        backgroundColor: Colors.green)
-                        : (enableButtonNotifier.password && enableButtonNotifier.confirmPassword)
+                        backgroundColor: Colors.white,)
+                        : (isButtonEnable)
                         ? const Text(
                       'Reset password',
                       style: TextStyle(color: Color(0xFFFFFFFF)),
@@ -161,21 +173,21 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
   Future<dynamic> _buildShowDialog(BuildContext context) {
     return showDialog(
       context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Error! Bad request.'),
-                                  content:
-                                      Text('Password reset failed. Verify OTP'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error! Bad request.'),
+          content:
+          const Text('Password reset failed. Verify OTP'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+        },
     );
   }
 }

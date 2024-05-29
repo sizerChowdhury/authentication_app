@@ -12,7 +12,7 @@ class Signup extends _$Signup {
     required String email, required String password}) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      return SignupRepository().SignUp(firstname, lastname, email, password);
+      return SignupRepository().signUp(firstname, lastname, email, password);
     });
   }
 }
