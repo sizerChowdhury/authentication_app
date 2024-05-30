@@ -5,6 +5,8 @@ import 'package:http/http.dart';
 
 class EmailConfirmationRepository {
   FutureOr<bool?> emailConfirmation(String email, String otp) async{
+    print(email);
+    print(otp);
     final response = await post(
       Uri.parse('http://34.72.136.54:4067/api/v1/auth/verifyOtp'),
       body: {
@@ -12,6 +14,7 @@ class EmailConfirmationRepository {
         'otp': otp,
       },
     );
+    print(response.statusCode);
     if(response.statusCode != 201) {
       throw Exception('Something went wrong');
     } else {
