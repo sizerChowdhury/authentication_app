@@ -25,38 +25,3 @@ class LogoutRepository {
   }
 }
 
-// body: SafeArea(
-// child: Padding(
-// padding: const EdgeInsets.all(24.0),
-// child: Column(
-// crossAxisAlignment: CrossAxisAlignment.center,
-// children: [
-// ProfilePictureHolder(image: Assets.profile.provider()),
-// const SizedBox(height: 20),
-// Row(
-// mainAxisAlignment: MainAxisAlignment.center,
-// children: [
-// (flag)
-// ? const CircularProgressIndicator()
-//     : Column(
-// crossAxisAlignment: CrossAxisAlignment.center,
-// children: [
-// Text(
-// 'Name: ${state.value?.getFirstName()} ${state.value?.getLastName()}'),
-// Text(
-// 'Email: ${state.value?.getEmail()}',
-// ),
-// ],
-// ),
-// ],
-// ),
-// const Spacer(),
-// TextButton(
-// onPressed: () {
-// ref.read(logoutControllerProvider.notifier).signOut();
-// },
-// child: (logoutFlag.isLoading)? const CircularProgressIndicator(): const Text('Logout')),
-// ],
-// ),
-// ),
-// ),
