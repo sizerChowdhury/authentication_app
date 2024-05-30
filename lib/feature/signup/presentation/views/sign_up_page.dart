@@ -171,35 +171,24 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                       lastname: lastname.text.toString(),
                       email: email.text.toString(),
                       password: password.text.toString(),
-                    )
-                        : null,
-                    style: !(isButtonEnable)
-                        ? const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                        Color(0xFFF3F6F6),
-                      ),
-                      minimumSize: WidgetStatePropertyAll(
-                        Size(double.infinity, 50),
-                      ),
-                    ) : const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                        Color.fromARGB(255, 97, 145, 122),
-                      ),
-                      minimumSize: WidgetStatePropertyAll(
-                        Size(double.infinity, 50),
-                      ),
+                    ): null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: (isButtonEnable)
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.secondary,
+                      minimumSize: const Size(double.infinity, 50),
                     ),
                     child: loginState.isLoading
                         ? const CircularProgressIndicator(
-                        backgroundColor: Colors.white,)
-                        : (isButtonEnable)
-                        ? const Text(
-                      'Create an account',
-                      style: TextStyle(color: Color(0xFFFFFFFF)),
+                      backgroundColor:  Colors.white,
                     )
-                        : const Text(
+                        : Text(
                       'Create an account',
-                      style: TextStyle(color: Color(0xFF797C7B)),
+                      style: TextStyle(
+                        color: (isButtonEnable)
+                            ? Theme.of(context).colorScheme.surface
+                            : Theme.of(context).colorScheme.tertiary,
+                      ),
                     ),
                   ),
                 ),
