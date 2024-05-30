@@ -1,8 +1,10 @@
 import 'package:authentication_app/core/gen/assets.gen.dart';
 import 'package:authentication_app/core/widgets/title_underline.dart';
 import 'package:authentication_app/feature/home_page/controller/home_page_controller.dart';
+import 'package:authentication_app/feature/home_page/controller/logout_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -23,6 +25,32 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final homePageState = ref.watch(homePageProvider);
+    final logoutState = ref.watch(logoutControllerProvider);
+
+    ref.listen(logoutControllerProvider,(_,next){
+      if(next.value ?? false){
+        context.go('/');
+      }
+      else if (next.hasError && !next.isLoading) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error! Bad request.'),
+              content: const Text('Logout failed'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -37,71 +65,79 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         centerTitle: true,
       ),
-      body: homePageState.isLoading?const CircularProgressIndicator(
-          backgroundColor: Colors.white,):Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 30,),
-            Stack(
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: const BoxDecoration(
-                    color:
-                    Color(0xFFFFC746), // Set your desired color here
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                Image(
-                  image: Assets.assets.images.profile.provider(),
-                  height: 75,
-                  width: 80, // Using the image provider
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Container(
-                    width: 30,
-                    height: 30,
+      body: homePageState.isLoading?Center(
+        child: const CircularProgressIndicator(
+            backgroundColor: Colors.white,),
+      ):Column(
+            children: [
+              const SizedBox(height: 30,),
+              Stack(
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
                     decoration: const BoxDecoration(
-                      color: Color(
-                          0xFF24786D), // Set your desired color here
+                      color:
+                      Color(0xFFFFC746), // Set your desired color here
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
-                      Icons.camera_alt,
-                      color: Colors.white,
-                      size: 15,
+                  ),
+                  Image(
+                    image: Assets.assets.images.profile.provider(),
+                    height: 75,
+                    width: 80, // Using the image provider
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: const BoxDecoration(
+                        color: Color(
+                            0xFF24786D), // Set your desired color here
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.camera_alt,
+                        color: Colors.white,
+                        size: 15,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 40,),
-               FutureBuilder<List<String>>(
-                future: _getFirstNameFromCache(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    final names = snapshot.data ?? [];
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        _buildRow("Firstname:", names[0]),
-                        _buildRow("Lastname:", names[1]),
-                        _buildRow("Email:", names[2]),
-                      ],
-                    );
-                  }
-                },
-                             ),
-          ],
-        ),
-      )
+                ],
+              ),
+              const SizedBox(height: 40,),
+                 Padding(
+                   padding: const EdgeInsets.fromLTRB(100, 20, 20, 0),
+                   child: FutureBuilder<List<String>>(
+                    future: _getFirstNameFromCache(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        final names = snapshot.data ?? [];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            _buildRow("Name:", "${names[0]} ${names[1]}"),
+                            _buildRow("Email:", names[2]),
+                          ],
+                        );
+                      }
+                    },
+                   ),
+                 ),
+                   SizedBox(height: 320,),
+                   ElevatedButton(
+                       onPressed: () {
+                         ref.read(logoutControllerProvider.notifier).signOut();
+                       },
+                       child: (logoutState.isLoading)? const CircularProgressIndicator(): const Text('Logout')),
+            ],
+          )
     );
   }
   Widget _buildRow(String title, String value) {
