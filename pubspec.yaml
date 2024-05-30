@@ -1,4 +1,4 @@
-name: first_app
+name: authentication_app
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -34,6 +34,9 @@ dependencies:
   go_router: ^14.0.2
   font_awesome_flutter: ^10.7.0
   http: ^1.2.1
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+  shared_preferences: ^2.2.3
 
 
 
@@ -45,9 +48,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_gen: ^5.4.0
   build_runner:
+  custom_lint:
+  riverpod_generator:
+  riverpod_lint:
   flutter_gen_runner:
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
