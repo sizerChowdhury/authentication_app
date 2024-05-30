@@ -165,8 +165,8 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('User already exist. Please Login'),
-          content: const Text('Failed to create new account.'),
+          title: const Text('Failed'),
+          content: const Text('Failed to send otp.'),
           actions: [
             TextButton(
               onPressed: () {
