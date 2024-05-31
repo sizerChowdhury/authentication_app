@@ -16,7 +16,7 @@ class ForgetPasswordPage extends ConsumerStatefulWidget {
 class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
   TextEditingController email = TextEditingController();
 
-  ({bool email}) enableButtonNotifier = (email: false);
+  bool enableButtonNotifier = false;
 
   @override
   void initState() {
@@ -27,12 +27,10 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
     );
   }
 
-  bool isButtonEnable = false;
 
   void updateEnableButtonNotifier() {
     setState(() {
-      enableButtonNotifier = (email: email.value.text.isNotEmpty,);
-      isButtonEnable = enableButtonNotifier.email;
+      enableButtonNotifier = email.text.toString().isNotEmpty;
     });
   }
 
@@ -99,7 +97,7 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: ElevatedButton(
-                    onPressed: (isButtonEnable)
+                    onPressed: (enableButtonNotifier)
                         ? () => ref
                             .read(forgetPasswordProvider.notifier)
                             .otpConfirmation(
@@ -107,7 +105,7 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
                             )
                         : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: (isButtonEnable)
+                      backgroundColor: (enableButtonNotifier)
                           ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).colorScheme.secondary,
                       minimumSize: const Size(double.infinity, 50),
@@ -119,7 +117,7 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
                         : Text(
                             'Submit',
                             style: TextStyle(
-                              color: (isButtonEnable)
+                              color: (enableButtonNotifier)
                                   ? Theme.of(context).colorScheme.surface
                                   : Theme.of(context).colorScheme.tertiary,
                             ),
