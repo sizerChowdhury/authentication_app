@@ -19,6 +19,7 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  bool isButtonEnable = false;
 
   ({bool email, bool password}) enableButtonNotifier =
       (email: false, password: false);
@@ -35,13 +36,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  bool isButtonEnable = false;
-
   void updateEnableButtonNotifier() {
     setState(() {
       enableButtonNotifier = (
         email: email.value.text.isNotEmpty,
-        password: password.value.text.isNotEmpty
+        password: password.value.text.isNotEmpty,
       );
       isButtonEnable =
           enableButtonNotifier.email && enableButtonNotifier.password;

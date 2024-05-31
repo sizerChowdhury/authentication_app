@@ -82,14 +82,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                       width: 80,
                       height: 80,
                       decoration: const BoxDecoration(
-                        color: Color(0xFFFFC746), // Set your desired color here
+                        color: Color(0xFFFFC746),
                         shape: BoxShape.circle,
                       ),
                     ),
                     Image(
                       image: Assets.assets.images.profile.provider(),
                       height: 75,
-                      width: 80, // Using the image provider
+                      width: 80,
                     ),
                     Positioned(
                       bottom: 0,
@@ -100,7 +100,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         decoration: const BoxDecoration(
                           color: Color(
                             0xFF24786D,
-                          ), // Set your desired color here
+                          ), 
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(

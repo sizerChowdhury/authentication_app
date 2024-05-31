@@ -18,6 +18,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   TextEditingController password = TextEditingController();
   TextEditingController firstname = TextEditingController();
   TextEditingController lastname = TextEditingController();
+  bool isButtonEnable = false;
 
   ({
     bool email,
@@ -44,8 +45,6 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
       () => updateEnableButtonNotifier(),
     );
   }
-
-  bool isButtonEnable = false;
 
   void updateEnableButtonNotifier() {
     setState(() {

@@ -18,6 +18,7 @@ class ResetPasswordPage extends ConsumerStatefulWidget {
 class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   TextEditingController password = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
+  bool isButtonEnable = false;
 
   ({bool password, bool confirmPassword}) enableButtonNotifier =
       (password: false, confirmPassword: false);
@@ -33,8 +34,6 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
       () => updateEnableButtonNotifier(),
     );
   }
-
-  bool isButtonEnable = false;
 
   void updateEnableButtonNotifier() {
     setState(() {
