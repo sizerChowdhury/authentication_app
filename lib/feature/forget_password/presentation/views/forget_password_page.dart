@@ -15,7 +15,6 @@ class ForgetPasswordPage extends ConsumerStatefulWidget {
 
 class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
   TextEditingController email = TextEditingController();
-
   bool enableButtonNotifier = false;
 
   @override
@@ -26,7 +25,6 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
       () => updateEnableButtonNotifier(),
     );
   }
-
 
   void updateEnableButtonNotifier() {
     setState(() {
