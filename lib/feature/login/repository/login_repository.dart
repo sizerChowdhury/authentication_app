@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginRepository {
-  Future<bool> logIn(String email, String password) async {
+  Future<bool> logIn({required String email, required String password}) async {
     try {
       final response = await http.post(
         Uri.parse('http://34.72.136.54:4067/api/v1/auth/login'),
