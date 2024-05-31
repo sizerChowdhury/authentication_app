@@ -4,9 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/navigation/router_config/router_config.dart';
 
 void main() {
-  // wrap the entire app with a ProviderScope so that widgets
-  // will be able to read providers
-  runApp(ProviderScope(child: MyApp()),
+  runApp(
+    ProviderScope(child: MyApp()),
   );
 }
 

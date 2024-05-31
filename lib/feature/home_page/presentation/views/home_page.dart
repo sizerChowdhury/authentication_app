@@ -11,7 +11,7 @@ class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
@@ -22,16 +22,16 @@ class _HomePageState extends ConsumerState<HomePage> {
       ref.read(homePageProvider.notifier).homePageApiCall();
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final homePageState = ref.watch(homePageProvider);
     final logoutState = ref.watch(logoutControllerProvider);
 
-    ref.listen(logoutControllerProvider,(_,next){
-      if(next.value ?? false){
+    ref.listen(logoutControllerProvider, (_, next) {
+      if (next.value ?? false) {
         context.go('/');
-      }
-      else if (next.hasError && !next.isLoading) {
+      } else if (next.hasError && !next.isLoading) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -54,63 +54,70 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title:
-        Stack(
+        title: Stack(
           children: [
-            Text('HomePage',
+            Text(
+              'HomePage',
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const Underline(right: 50)
+            const Underline(right: 50),
           ],
         ),
         centerTitle: true,
       ),
-      body: homePageState.isLoading?Center(
-        child: const CircularProgressIndicator(
-            backgroundColor: Colors.white,),
-      ):Column(
-            children: [
-              const SizedBox(height: 30,),
-              Stack(
-                children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: const BoxDecoration(
-                      color:
-                      Color(0xFFFFC746), // Set your desired color here
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  Image(
-                    image: Assets.assets.images.profile.provider(),
-                    height: 75,
-                    width: 80, // Using the image provider
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: 30,
-                      height: 30,
+      body: homePageState.isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.white,
+              ),
+            )
+          : Column(
+              children: [
+                const SizedBox(
+                  height: 30,
+                ),
+                Stack(
+                  children: [
+                    Container(
+                      width: 80,
+                      height: 80,
                       decoration: const BoxDecoration(
-                        color: Color(
-                            0xFF24786D), // Set your desired color here
+                        color: Color(0xFFFFC746), // Set your desired color here
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
-                        Icons.camera_alt,
-                        color: Colors.white,
-                        size: 15,
+                    ),
+                    Image(
+                      image: Assets.assets.images.profile.provider(),
+                      height: 75,
+                      width: 80, // Using the image provider
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        width: 30,
+                        height: 30,
+                        decoration: const BoxDecoration(
+                          color: Color(
+                            0xFF24786D,
+                          ), // Set your desired color here
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.camera_alt,
+                          color: Colors.white,
+                          size: 15,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 40,),
-                 Padding(
-                   padding: const EdgeInsets.fromLTRB(100, 20, 20, 0),
-                   child: FutureBuilder<List<String>>(
+                  ],
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(100, 20, 20, 0),
+                  child: FutureBuilder<List<String>>(
                     future: _getFirstNameFromCache(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -128,18 +135,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                         );
                       }
                     },
-                   ),
-                 ),
-                   SizedBox(height: 320,),
-                   ElevatedButton(
-                       onPressed: () {
-                         ref.read(logoutControllerProvider.notifier).signOut();
-                       },
-                       child: (logoutState.isLoading)? const CircularProgressIndicator(): const Text('Logout')),
-            ],
-          )
+                  ),
+                ),
+                const SizedBox(
+                  height: 320,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.read(logoutControllerProvider.notifier).signOut();
+                  },
+                  child: (logoutState.isLoading)
+                      ? const CircularProgressIndicator()
+                      : const Text('Logout'),
+                ),
+              ],
+            ),
     );
   }
+
   Widget _buildRow(String title, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -165,5 +178,3 @@ class _HomePageState extends ConsumerState<HomePage> {
     return item;
   }
 }
-
-

@@ -1,6 +1,8 @@
 import 'package:authentication_app/feature/login/repository/login_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 part 'login_controller.g.dart';
+
 @riverpod
 class Login extends _$Login {
   @override

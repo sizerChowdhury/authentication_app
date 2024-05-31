@@ -8,12 +8,16 @@ import 'package:go_router/go_router.dart';
 class EmailConfirmationPage extends ConsumerStatefulWidget {
   final String email;
   final String pageSelector;
-  const EmailConfirmationPage(
-  {super.key, required this.email, required this.pageSelector,});
+
+  const EmailConfirmationPage({
+    required this.email,
+    required this.pageSelector,
+    super.key,
+  });
 
   @override
-  ConsumerState<EmailConfirmationPage> createState()
-  => _EmailConfirmationPageState();
+  ConsumerState<EmailConfirmationPage> createState() =>
+      _EmailConfirmationPageState();
 }
 
 class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
@@ -24,17 +28,14 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
   @override
   void initState() {
     super.initState();
-
     otp.addListener(
-          () => updateEnableButtonNotifier(),
+      () => updateEnableButtonNotifier(),
     );
   }
 
   void updateEnableButtonNotifier() {
     setState(() {
-      enableButtonNotifier = (
-      otp: otp.value.text.isNotEmpty,
-      );
+      enableButtonNotifier = (otp: otp.value.text.isNotEmpty,);
     });
   }
 
@@ -44,27 +45,27 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
 
     ref.listen(emailConfirmationProvider, (_, next) {
       if (next.value ?? false) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Email verification successful'),
-                    content: const Text('Press OK'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          if (widget.pageSelector == "signUp") {
-                            context.go('/');
-                          } else if (widget.pageSelector == "forgetPassword") {
-                            context.go('/resetPassword/${widget.email}');
-                          }
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  );
-                },
-              );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Email verification successful'),
+              content: const Text('Press OK'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    if (widget.pageSelector == "signUp") {
+                      context.go('/');
+                    } else if (widget.pageSelector == "forgetPassword") {
+                      context.go('/resetPassword/${widget.email}');
+                    }
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       } else if (next.hasError && !next.isLoading) {
         _buildShowDialog(context);
       }
@@ -79,17 +80,20 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
               children: [
                 Stack(
                   children: [
-                    Text('Email Confirmation',
+                    Text(
+                      'Email Confirmation',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    const Underline(right: 77)
+                    const Underline(right: 77),
                   ],
                 ),
                 const SizedBox(height: 45),
-                Text("We've sent a code to your email address",
+                Text(
+                  "We've sent a code to your email address",
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                Text('Please check your inbox',
+                Text(
+                  'Please check your inbox',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 100),
@@ -98,11 +102,12 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Your code',
-                        style: Theme.of(context).textTheme.headlineLarge ,
+                      Text(
+                        'Your code',
+                        style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       TextField(
-                        decoration:const InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: '',
                         ),
                         controller: otp,
@@ -116,11 +121,13 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: ElevatedButton(
                     onPressed: (enableButtonNotifier.otp)
-                        ? () => ref.read(emailConfirmationProvider.notifier).
-                    otpConfirmation(
-                      email: widget.email,
-                      otp: otp.text.toString(),
-                    ): null,
+                        ? () => ref
+                            .read(emailConfirmationProvider.notifier)
+                            .otpConfirmation(
+                              email: widget.email,
+                              otp: otp.text.toString(),
+                            )
+                        : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: (enableButtonNotifier.otp)
                           ? Theme.of(context).colorScheme.primary
@@ -129,16 +136,16 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
                     ),
                     child: loginState.isLoading
                         ? const CircularProgressIndicator(
-                      backgroundColor:  Colors.white,
-                    )
+                            backgroundColor: Colors.white,
+                          )
                         : Text(
-                      'Submit',
-                      style: TextStyle(
-                        color: (enableButtonNotifier.otp)
-                            ? Theme.of(context).colorScheme.surface
-                            : Theme.of(context).colorScheme.tertiary,
-                      ),
-                    ),
+                            'Submit',
+                            style: TextStyle(
+                              color: (enableButtonNotifier.otp)
+                                  ? Theme.of(context).colorScheme.surface
+                                  : Theme.of(context).colorScheme.tertiary,
+                            ),
+                          ),
                   ),
                 ),
               ],
@@ -160,12 +167,12 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                      },
+              },
               child: const Text('OK'),
             ),
           ],
         );
-        },
+      },
     );
   }
 }

@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-
 class ForgetPasswordPage extends ConsumerStatefulWidget {
-
-  const ForgetPasswordPage(
-      {super.key,});
+  const ForgetPasswordPage({
+    super.key,
+  });
 
   @override
   ConsumerState<ForgetPasswordPage> createState() => _ForgetPasswordPageState();
@@ -24,15 +23,15 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
     super.initState();
 
     email.addListener(
-          () => updateEnableButtonNotifier(),
+      () => updateEnableButtonNotifier(),
     );
   }
+
   bool isButtonEnable = false;
+
   void updateEnableButtonNotifier() {
     setState(() {
-      enableButtonNotifier = (
-      email: email.value.text.isNotEmpty,
-      );
+      enableButtonNotifier = (email: email.value.text.isNotEmpty,);
       isButtonEnable = enableButtonNotifier.email;
     });
   }
@@ -60,31 +59,34 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
               children: [
                 Stack(
                   children: [
-                    Text('Forgot Password',
+                    Text(
+                      'Forgot Password',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    const Underline(right: 77)
+                    const Underline(right: 77),
                   ],
                 ),
                 const SizedBox(height: 45),
-                Text('Enter your email address. We will send a code',
+                Text(
+                  'Enter your email address. We will send a code',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                Text('to verify your identity',
+                Text(
+                  'to verify your identity',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 100),
-
                 Padding(
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Your email',
-                        style: Theme.of(context).textTheme.headlineLarge ,
+                      Text(
+                        'Your email',
+                        style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       TextField(
-                        decoration:const InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Enter your email',
                         ),
                         controller: email,
@@ -98,10 +100,12 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: ElevatedButton(
                     onPressed: (isButtonEnable)
-                        ? () => ref.read(forgetPasswordProvider.notifier).
-                    otpConfirmation(
-                      email: email.text.toString(),
-                    ): null,
+                        ? () => ref
+                            .read(forgetPasswordProvider.notifier)
+                            .otpConfirmation(
+                              email: email.text.toString(),
+                            )
+                        : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: (isButtonEnable)
                           ? Theme.of(context).colorScheme.primary
@@ -110,16 +114,16 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
                     ),
                     child: loginState.isLoading
                         ? const CircularProgressIndicator(
-                      backgroundColor:  Colors.white,
-                    )
+                            backgroundColor: Colors.white,
+                          )
                         : Text(
-                      'Submit',
-                      style: TextStyle(
-                        color: (isButtonEnable)
-                            ? Theme.of(context).colorScheme.surface
-                            : Theme.of(context).colorScheme.tertiary,
-                      ),
-                    ),
+                            'Submit',
+                            style: TextStyle(
+                              color: (isButtonEnable)
+                                  ? Theme.of(context).colorScheme.surface
+                                  : Theme.of(context).colorScheme.tertiary,
+                            ),
+                          ),
                   ),
                 ),
               ],

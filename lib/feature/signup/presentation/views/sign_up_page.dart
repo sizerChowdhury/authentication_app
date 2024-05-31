@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-
-
 class SignUpPage extends ConsumerStatefulWidget {
   const SignUpPage({super.key});
 
@@ -21,45 +19,48 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   TextEditingController firstname = TextEditingController();
   TextEditingController lastname = TextEditingController();
 
-  ({bool email, bool password, bool firstname, bool lastname})
-  enableButtonNotifier =
-  (email: false, password: false, firstname: false, lastname: false);
+  ({
+    bool email,
+    bool password,
+    bool firstname,
+    bool lastname
+  }) enableButtonNotifier =
+      (email: false, password: false, firstname: false, lastname: false);
 
   @override
   void initState() {
     super.initState();
     firstname.addListener(
-          () => updateEnableButtonNotifier(),
+      () => updateEnableButtonNotifier(),
     );
 
     lastname.addListener(
-          () => updateEnableButtonNotifier(),
+      () => updateEnableButtonNotifier(),
     );
     email.addListener(
-          () => updateEnableButtonNotifier(),
+      () => updateEnableButtonNotifier(),
     );
     password.addListener(
-          () => updateEnableButtonNotifier(),
+      () => updateEnableButtonNotifier(),
     );
   }
 
   bool isButtonEnable = false;
+
   void updateEnableButtonNotifier() {
     setState(() {
       enableButtonNotifier = (
-      firstname: firstname.value.text.isNotEmpty,
-      lastname: lastname.value.text.isNotEmpty,
-      email: email.value.text.isNotEmpty,
-      password: password.value.text.isNotEmpty
+        firstname: firstname.value.text.isNotEmpty,
+        lastname: lastname.value.text.isNotEmpty,
+        email: email.value.text.isNotEmpty,
+        password: password.value.text.isNotEmpty
       );
       isButtonEnable = enableButtonNotifier.email &&
           enableButtonNotifier.password &&
           enableButtonNotifier.firstname &&
           enableButtonNotifier.lastname;
-
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +79,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    context.go('/emailConfirmation/$emailController/$pageSelector');
+                    context.go(
+                      '/emailConfirmation/$emailController/$pageSelector',
+                    );
                   },
                   child: const Text('OK'),
                 ),
@@ -91,10 +94,8 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
       }
     });
 
-
     return Scaffold(
-      appBar: AppBar(
-      ),
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Center(
@@ -102,17 +103,20 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               children: [
                 Stack(
                   children: [
-                    Text('Sign Up With Email',
+                    Text(
+                      'Sign Up With Email',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const Underline(right: 77),
                   ],
                 ),
                 const SizedBox(height: 45),
-                Text('Get chatting with friends and family today by',
+                Text(
+                  'Get chatting with friends and family today by',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                Text('signing up for our chat app!',
+                Text(
+                  'signing up for our chat app!',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 55),
@@ -121,42 +125,46 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                        Text('First name',
-                          style: Theme.of(context).textTheme.headlineLarge ,
+                      Text(
+                        'First name',
+                        style: Theme.of(context).textTheme.headlineLarge,
+                      ),
+                      TextField(
+                        decoration: const InputDecoration(
+                          hintText: '',
                         ),
-                        TextField(
-                          decoration:const InputDecoration(
-                            hintText: '',
-                          ),
-                          controller: firstname,
+                        controller: firstname,
+                      ),
+                      Text(
+                        'Last name',
+                        style: Theme.of(context).textTheme.headlineLarge,
+                      ),
+                      TextField(
+                        decoration: const InputDecoration(
+                          hintText: '',
                         ),
-                        Text('Last name',
-                          style: Theme.of(context).textTheme.headlineLarge ,
+                        controller: lastname,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Your email',
+                        style: Theme.of(context).textTheme.headlineLarge,
+                      ),
+                      TextField(
+                        decoration: const InputDecoration(
+                          hintText: '',
                         ),
-                        TextField(
-                          decoration:const InputDecoration(
-                            hintText: '',
-                          ),
-                          controller: lastname,
-                        ),
-                        const SizedBox(height: 10),
-                        Text('Your email',
-                          style: Theme.of(context).textTheme.headlineLarge ,
-                        ),
-                        TextField(
-                          decoration:const InputDecoration(
-                            hintText: '',
-                          ),
-                          controller: email,
-                        ),
-                        const SizedBox(height: 10),
-                        Text('Password',
-                          style: Theme.of(context).textTheme.headlineLarge,
-                          ),
-                        PasswordField(
-                            controller: password,
-                            hintText: '',
-                          ),
+                        controller: email,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Password',
+                        style: Theme.of(context).textTheme.headlineLarge,
+                      ),
+                      PasswordField(
+                        controller: password,
+                        hintText: '',
+                      ),
                     ],
                   ),
                 ),
@@ -167,11 +175,12 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   child: ElevatedButton(
                     onPressed: (isButtonEnable)
                         ? () => ref.read(signupProvider.notifier).signUp(
-                      firstname: firstname.text.toString(),
-                      lastname: lastname.text.toString(),
-                      email: email.text.toString(),
-                      password: password.text.toString(),
-                    ): null,
+                              firstname: firstname.text.toString(),
+                              lastname: lastname.text.toString(),
+                              email: email.text.toString(),
+                              password: password.text.toString(),
+                            )
+                        : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: (isButtonEnable)
                           ? Theme.of(context).colorScheme.primary
@@ -180,25 +189,26 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     ),
                     child: loginState.isLoading
                         ? const CircularProgressIndicator(
-                      backgroundColor:  Colors.white,
-                    )
+                            backgroundColor: Colors.white,
+                          )
                         : Text(
-                      'Create an account',
-                      style: TextStyle(
-                        color: (isButtonEnable)
-                            ? Theme.of(context).colorScheme.surface
-                            : Theme.of(context).colorScheme.tertiary,
-                      ),
-                    ),
+                            'Create an account',
+                            style: TextStyle(
+                              color: (isButtonEnable)
+                                  ? Theme.of(context).colorScheme.surface
+                                  : Theme.of(context).colorScheme.tertiary,
+                            ),
+                          ),
                   ),
                 ),
                 TextButton(
                   onPressed: () {
                     GoRouter.of(context).pushNamed(Routes.login);
                   },
-                  child: Text('Already have an account?Log In',
-                  style: Theme.of(context).textTheme.headlineLarge,
-                  )
+                  child: Text(
+                    'Already have an account?Log In',
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
                 ),
               ],
             ),
@@ -211,21 +221,20 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   Future<dynamic> _buildShowDialog(BuildContext context) {
     return showDialog(
       context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('User already exist. Please Login'),
-              content: const Text('Failed to create new account.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('User already exist. Please Login'),
+          content: const Text('Failed to create new account.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
-

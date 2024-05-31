@@ -19,15 +19,11 @@ class LoginRepository {
       if (response.statusCode == 201) {
         final token = jsonDecode(response.body)["token"];
         await _saveTokenToCache(token);
-        print("token:");
-        print(token);
         return true;
       } else {
-        print('Failed to login: ${response.statusCode}');
         return false;
       }
     } catch (e) {
-      print('Error during login: $e');
       return false;
     }
   }
@@ -36,9 +32,8 @@ class LoginRepository {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', token);
-      print('Token saved to cache: $token');
     } catch (e) {
-      print('Error saving token to cache: $e');
+      throw Exception('Something went wrong');
     }
   }
 }

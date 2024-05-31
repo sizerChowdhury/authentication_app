@@ -10,7 +10,7 @@ class AppTheme {
         surface: Colors.white,
         tertiary: Color.fromARGB(255, 81, 81, 81),
       ),
-      textTheme: TextTheme(
+      textTheme: const TextTheme(
         headlineLarge: TextStyle(
           fontFamily: FontFamily.circular,
           fontSize: 14,
@@ -54,7 +54,6 @@ class AppTheme {
           ),
         ),
       ),
-
     );
   }
 }
