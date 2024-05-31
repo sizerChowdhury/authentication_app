@@ -13,7 +13,7 @@ class ForgetPassword extends _$ForgetPassword {
   void otpConfirmation({required String email}) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      return ForgetPasswordRepository().forgetPassword(email);
+      return ForgetPasswordRepository().forgetPassword(email: email);
     });
   }
 }
