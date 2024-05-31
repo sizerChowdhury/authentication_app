@@ -18,7 +18,11 @@ class Signup extends _$Signup {
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      return SignupRepository().signUp(firstname, lastname, email, password);
+      return SignupRepository().signUp(
+          firstname: firstname,
+          lastname: lastname,
+          email: email,
+          password: password);
     });
   }
 }
