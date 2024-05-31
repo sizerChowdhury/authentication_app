@@ -22,8 +22,7 @@ class EmailConfirmationPage extends ConsumerStatefulWidget {
 
 class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
   TextEditingController otp = TextEditingController();
-
-   bool enableButtonNotifier = false;
+  bool enableButtonNotifier = false;
 
   @override
   void initState() {
