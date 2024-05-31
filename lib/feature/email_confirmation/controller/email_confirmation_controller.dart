@@ -13,7 +13,8 @@ class EmailConfirmation extends _$EmailConfirmation {
   void otpConfirmation({required String email, required String otp}) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      return EmailConfirmationRepository().emailConfirmation(email, otp);
+      return EmailConfirmationRepository()
+          .emailConfirmation(email: email, otp: otp);
     });
   }
 }
