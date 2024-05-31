@@ -62,6 +62,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
               actions: [
                 TextButton(
                   onPressed: () {
+                    Navigator.of(context).pop();
                     context.go('/');
                   },
                   child: const Text('OK'),

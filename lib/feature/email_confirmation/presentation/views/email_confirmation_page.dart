@@ -23,7 +23,7 @@ class EmailConfirmationPage extends ConsumerStatefulWidget {
 class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
   TextEditingController otp = TextEditingController();
 
-  ({bool otp}) enableButtonNotifier = (otp: false);
+   bool enableButtonNotifier = false;
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
 
   void updateEnableButtonNotifier() {
     setState(() {
-      enableButtonNotifier = (otp: otp.value.text.isNotEmpty,);
+      enableButtonNotifier = otp.text.toString().isNotEmpty;
     });
   }
 
@@ -59,6 +59,7 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
                     } else if (widget.pageSelector == "forgetPassword") {
                       context.go('/resetPassword/${widget.email}');
                     }
+                    Navigator.of(context).pop();
                   },
                   child: const Text('OK'),
                 ),
@@ -120,7 +121,7 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: ElevatedButton(
-                    onPressed: (enableButtonNotifier.otp)
+                    onPressed: (enableButtonNotifier)
                         ? () => ref
                             .read(emailConfirmationProvider.notifier)
                             .otpConfirmation(
@@ -129,7 +130,7 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
                             )
                         : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: (enableButtonNotifier.otp)
+                      backgroundColor: (enableButtonNotifier)
                           ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).colorScheme.secondary,
                       minimumSize: const Size(double.infinity, 50),
@@ -141,7 +142,7 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
                         : Text(
                             'Submit',
                             style: TextStyle(
-                              color: (enableButtonNotifier.otp)
+                              color: (enableButtonNotifier)
                                   ? Theme.of(context).colorScheme.surface
                                   : Theme.of(context).colorScheme.tertiary,
                             ),
