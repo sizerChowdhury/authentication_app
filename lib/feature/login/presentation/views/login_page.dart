@@ -27,7 +27,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   void initState() {
     super.initState();
-
+    email.clear();
+    password.clear();
     email.addListener(
       () => updateEnableButtonNotifier(),
     );
@@ -75,7 +76,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     const Underline(right: 77),
                   ],
                 ),
-                const SizedBox(height: 45),
+                const SizedBox(height: 16),
                 Text(
                   'Welcome back! Sign in using your social',
                   style: Theme.of(context).textTheme.titleMedium,
@@ -113,33 +114,38 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 55),
+                const SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        height: 1,
-                        width: 150,
-                        color: const Color(0xFFCDD1D0),
-                      ),
-                      const Text(
-                        'OR',
-                        style: TextStyle(
-                          fontFamily: FontFamily.circular,
-                          color: Color(0xFFCDD1D0),
+                      Expanded(
+                        child: Container(
+                          height: 1,
+                          color: const Color(0xFFCDD1D0),
                         ),
                       ),
-                      Container(
-                        height: 1,
-                        width: 150,
-                        color: const Color(0xFFCDD1D0),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          'OR',
+                          style: TextStyle(
+                            fontFamily: FontFamily.circular,
+                            color: Color(0xFFCDD1D0),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          height: 1,
+                          color: const Color(0xFFCDD1D0),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Column(
@@ -155,7 +161,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ),
                         controller: email,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 30),
                       Text(
                         'Password',
                         style: Theme.of(context).textTheme.headlineLarge,
@@ -166,6 +172,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       ),
                     ],
                   ),
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 24),
@@ -199,7 +208,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 115),
+                const SizedBox(height: 151),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 24, right: 24),

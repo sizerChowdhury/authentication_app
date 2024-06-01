@@ -76,7 +76,14 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
     });
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.go('/');
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Center(
@@ -85,13 +92,13 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                 Stack(
                   children: [
                     Text(
-                      'Forget Passwordd',
+                      'Reset Password',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const Underline(right: 77),
                   ],
                 ),
-                const SizedBox(height: 45),
+                const SizedBox(height: 16),
                 Text(
                   "Please enter a new password. Don't enter",
                   style: Theme.of(context).textTheme.titleMedium,
@@ -100,7 +107,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                   'your old password',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                const SizedBox(height: 100),
+                const SizedBox(height: 70),
                 Padding(
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Column(
@@ -114,7 +121,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                         controller: password,
                         hintText: '',
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 30),
                       Text(
                         'Confirm Password',
                         style: Theme.of(context).textTheme.headlineLarge,
@@ -126,7 +133,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 280),
+                const SizedBox(height: 288),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 24, right: 24),

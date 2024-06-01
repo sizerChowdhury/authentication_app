@@ -1,3 +1,4 @@
+import 'package:authentication_app/core/navigation/routes/routes_name.dart';
 import 'package:authentication_app/core/widgets/title_underline.dart';
 import 'package:authentication_app/feature/forget_password/controller/forget_password_controller.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,14 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
     });
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.go('/');
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Center(
@@ -62,7 +70,7 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
                     const Underline(right: 77),
                   ],
                 ),
-                const SizedBox(height: 45),
+                const SizedBox(height: 16),
                 Text(
                   'Enter your email address. We will send a code',
                   style: Theme.of(context).textTheme.titleMedium,
@@ -71,7 +79,7 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
                   'to verify your identity',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                const SizedBox(height: 100),
+                const SizedBox(height: 70),
                 Padding(
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Column(
@@ -90,7 +98,7 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 280),
+                const SizedBox(height: 347),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 24, right: 24),
@@ -120,6 +128,15 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
                                   : Theme.of(context).colorScheme.tertiary,
                             ),
                           ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    GoRouter.of(context).pushNamed(Routes.login);
+                  },
+                  child: Text(
+                    'Remember your password?Log In',
+                    style: Theme.of(context).textTheme.headlineLarge,
                   ),
                 ),
               ],

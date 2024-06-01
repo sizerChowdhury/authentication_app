@@ -109,7 +109,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     const Underline(right: 77),
                   ],
                 ),
-                const SizedBox(height: 45),
+                const SizedBox(height: 15),
                 Text(
                   'Get chatting with friends and family today by',
                   style: Theme.of(context).textTheme.titleMedium,
@@ -118,7 +118,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   'signing up for our chat app!',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                const SizedBox(height: 55),
+                const SizedBox(height: 60),
                 Padding(
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Column(
@@ -134,6 +134,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                         ),
                         controller: firstname,
                       ),
+                      const SizedBox(
+                        height: 30,
+                      ),
                       Text(
                         'Last name',
                         style: Theme.of(context).textTheme.headlineLarge,
@@ -144,7 +147,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                         ),
                         controller: lastname,
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(
+                        height: 30,
+                      ),
                       Text(
                         'Your email',
                         style: Theme.of(context).textTheme.headlineLarge,
@@ -155,7 +160,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                         ),
                         controller: email,
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(
+                        height: 30,
+                      ),
                       Text(
                         'Password',
                         style: Theme.of(context).textTheme.headlineLarge,
@@ -167,7 +174,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 115),
+                const SizedBox(height: 94),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 24, right: 24),

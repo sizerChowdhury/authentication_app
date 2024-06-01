@@ -72,7 +72,14 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
     });
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.go('/');
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Center(
@@ -87,7 +94,7 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
                     const Underline(right: 77),
                   ],
                 ),
-                const SizedBox(height: 45),
+                const SizedBox(height: 16),
                 Text(
                   "We've sent a code to your email address",
                   style: Theme.of(context).textTheme.titleMedium,
@@ -96,7 +103,7 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
                   'Please check your inbox',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                const SizedBox(height: 100),
+                const SizedBox(height: 70),
                 Padding(
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Column(
@@ -115,7 +122,7 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 280),
+                const SizedBox(height: 347),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 24, right: 24),
