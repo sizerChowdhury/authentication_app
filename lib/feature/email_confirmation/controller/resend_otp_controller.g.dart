@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'logout_controller.dart';
+part of 'resend_otp_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$logoutControllerHash() => r'b27bc88d49e8dddc47b0d235323e0796316a5860';
+String _$resendOtpControllerHash() =>
+    r'03d4ea4dcb8270afde1b73791c109d44d9b8d21d';
 
-/// See also [LogoutController].
-@ProviderFor(LogoutController)
-final logoutControllerProvider =
-    AutoDisposeAsyncNotifierProvider<LogoutController, bool?>.internal(
-  LogoutController.new,
-  name: r'logoutControllerProvider',
+/// See also [ResendOtpController].
+@ProviderFor(ResendOtpController)
+final resendOtpControllerProvider =
+    AutoDisposeAsyncNotifierProvider<ResendOtpController, bool?>.internal(
+  ResendOtpController.new,
+  name: r'resendOtpControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$logoutControllerHash,
+      : _$resendOtpControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$LogoutController = AutoDisposeAsyncNotifier<bool?>;
+typedef _$ResendOtpController = AutoDisposeAsyncNotifier<bool?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

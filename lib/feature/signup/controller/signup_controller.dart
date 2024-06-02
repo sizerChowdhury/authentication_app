@@ -22,7 +22,7 @@ class Signup extends _$Signup {
           firstname: firstname,
           lastname: lastname,
           email: email,
-          password: password);
+          password: password,);
     });
   }
 }

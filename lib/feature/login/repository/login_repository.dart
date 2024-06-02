@@ -1,39 +1,27 @@
+import 'dart:async';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:authentication_app/feature/login/presentation/widgets/login_model.dart';
+import 'package:http/http.dart';
 
 class LoginRepository {
-  Future<bool> logIn({required String email, required String password}) async {
-    try {
-      final response = await http.post(
-        Uri.parse('http://34.72.136.54:4067/api/v1/auth/login'),
-        body: {
-          'email': email,
-          'password': password,
-          'OS': 'IOS',
-          'model': 'iPhone 15',
-          'FCMToken': 'Token1',
-        },
-      );
-
-      if (response.statusCode == 201) {
-        final token = jsonDecode(response.body)["token"];
-        await _saveTokenToCache(token);
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<void> _saveTokenToCache(String token) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('token', token);
-    } catch (e) {
+  static FutureOr<LoginModelState?> logIn({
+    required email,
+    required password,
+  }) async {
+    Response response = await post(
+      Uri.parse('http://34.72.136.54:4067/api/v1/auth/login'),
+      body: {
+        'email': email,
+        'password': password,
+        'OS': 'IOS',
+        'model': 'iPhone 15',
+        'FCMToken': 'Token1',
+      },
+    );
+    if (response.statusCode != 201) {
       throw Exception('Something went wrong');
+    } else {
+      return LoginModelState(true, jsonDecode(response.body)['token']);
     }
   }
 }

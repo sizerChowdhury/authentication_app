@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:authentication_app/core/widgets/title_underline.dart';
 import 'package:authentication_app/feature/email_confirmation/controller/email_confirmation_controller.dart';
+import 'package:authentication_app/feature/email_confirmation/controller/resend_otp_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -23,13 +24,46 @@ class EmailConfirmationPage extends ConsumerStatefulWidget {
 class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
   TextEditingController otp = TextEditingController();
   bool enableButtonNotifier = false;
+  Timer? _timer;
+  int _countDown = 10;
+  bool canResend = false;
 
   @override
   void initState() {
     super.initState();
+    startTimer();
     otp.addListener(
       () => updateEnableButtonNotifier(),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer!.cancel();
+  }
+
+  void startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_countDown > 0) {
+          _countDown--;
+        } else {
+          _timer?.cancel();
+          canResend = true;
+        }
+      });
+    });
+  }
+
+  void resendOtp() {
+    if (canResend == true) {
+      setState(() {
+        _countDown = 10;
+        canResend = false;
+      });
+      startTimer();
+    }
   }
 
   void updateEnableButtonNotifier() {
@@ -68,6 +102,47 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
         );
       } else if (next.hasError && !next.isLoading) {
         _buildShowDialog(context);
+      }
+    });
+
+    ref.listen(resendOtpControllerProvider, (_, next) {
+      if (next.value ?? false) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Resend OTP successfully!'),
+              content: const Text('Check your inbox'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    resendOtp();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      } else if (next.hasError && !next.isLoading) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('User already exist. Please Login'),
+              content: const Text('Failed to create new account.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       }
     });
 
@@ -155,6 +230,20 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
                           ),
                   ),
                 ),
+                if (_countDown > 0)
+                  Text(
+                    "Resend Email in ${_countDown.toString()} seconds",
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                if (_countDown == 0)
+                  TextButton(
+                    onPressed: () => ref
+                        .read(resendOtpControllerProvider.notifier)
+                        .otpConfirmation(
+                          email: widget.email,
+                        ),
+                    child: const Text("Resend Email"),
+                  ),
               ],
             ),
           ),

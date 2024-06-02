@@ -8,6 +8,7 @@ import 'package:authentication_app/feature/login/controller/login_controller.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -51,10 +52,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final loginState = ref.watch(loginProvider);
-
-    ref.listen(loginProvider, (_, next) {
-      if (next.value ?? false) {
-        context.pushNamed(Routes.home);
+    ref.listen(loginProvider, (_, next) async {
+      if (next.value?.getState() ?? false) {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('token', next.value!.getToken());
+        context.go('/homePage');
       } else if (next.hasError && !next.isLoading) {
         _buildShowDialog(context);
       }
@@ -64,7 +66,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       appBar: AppBar(),
       body: SingleChildScrollView(
         child: SafeArea(
-          child: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 22, right: 22),
             child: Column(
               children: [
                 Stack(
@@ -116,7 +119,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
                 const SizedBox(height: 30),
                 Padding(
-                  padding: const EdgeInsets.only(left: 24, right: 24),
+                  padding: const EdgeInsets.only(left: 27, right: 27),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -208,7 +211,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 151),
+                const SizedBox(height: 121),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 24, right: 24),
@@ -244,7 +247,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     GoRouter.of(context).pushNamed(Routes.signup);
                   },
                   child: Text(
-                    "Don't have an account?Sign up",
+                    "Don't have an account?Signup",
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
                 ),
