@@ -5,6 +5,7 @@ class PasswordField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final ValueChanged<String>? onChanged;
+
   const PasswordField({
     super.key,
     required this.controller,
@@ -13,7 +14,7 @@ class PasswordField extends StatefulWidget {
   });
 
   @override
-  _PasswordFieldState createState() => _PasswordFieldState();
+  State<PasswordField> createState() => _PasswordFieldState();
 }
 
 class _PasswordFieldState extends State<PasswordField> {
@@ -27,16 +28,16 @@ class _PasswordFieldState extends State<PasswordField> {
       obscureText: _isSecurePassword,
       decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: TextStyle(
+        hintStyle: const TextStyle(
           fontFamily: FontFamily.circular,
           color: Color(0xFFC1CAD0),
         ),
-        enabledBorder: UnderlineInputBorder(
+        enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFFC1CAD0),
           ),
         ),
-        focusedBorder: UnderlineInputBorder(
+        focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(
             color: Color(0xFF24786D),
           ),
@@ -48,8 +49,8 @@ class _PasswordFieldState extends State<PasswordField> {
             });
           },
           icon: _isSecurePassword
-              ? Icon(Icons.visibility)
-              : Icon(Icons.visibility_off),
+              ? const Icon(Icons.visibility)
+              : const Icon(Icons.visibility_off),
         ),
       ),
     );

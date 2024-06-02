@@ -8,9 +8,7 @@ import 'package:authentication_app/feature/login/controller/login_controller.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -22,6 +20,7 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  bool isButtonEnable = false;
 
   ({bool email, bool password}) enableButtonNotifier =
       (email: false, password: false);
@@ -29,7 +28,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   void initState() {
     super.initState();
-
+    email.clear();
+    password.clear();
     email.addListener(
       () => updateEnableButtonNotifier(),
     );
@@ -37,207 +37,226 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       () => updateEnableButtonNotifier(),
     );
   }
-  bool isButtonEnable = false;
 
   void updateEnableButtonNotifier() {
     setState(() {
       enableButtonNotifier = (
         email: email.value.text.isNotEmpty,
-        password: password.value.text.isNotEmpty
+        password: password.value.text.isNotEmpty,
       );
-      isButtonEnable = enableButtonNotifier.email &&
-          enableButtonNotifier.password;
+      isButtonEnable =
+          enableButtonNotifier.email && enableButtonNotifier.password;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final loginState = ref.watch(loginProvider);
-
-    ref.listen(loginProvider, (_, next) {
-      if (next.value ?? false) {
-        context.pushNamed(Routes.home);
+    ref.listen(loginProvider, (_, next) async {
+      if (next.value?.getState() ?? false) {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('token', next.value!.getToken());
+        context.go('/homePage');
       } else if (next.hasError && !next.isLoading) {
         _buildShowDialog(context);
       }
     });
 
-
     return Scaffold(
-        appBar: AppBar(),
-        body: SingleChildScrollView(
-          child: SafeArea(
-            child: Center(
-
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      Text('Log In to Authy',
+      appBar: AppBar(),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 22, right: 22),
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    Text(
+                      'Log In to Authy',
                       style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      const Underline(right: 77)
-                    ],
-                  ),
-                  const SizedBox(height: 45),
-                  Text('Welcome back! Sign in using your social',
+                    ),
+                    const Underline(right: 77),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Welcome back! Sign in using your social',
                   style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  Text('account or email to continue us',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 30),
-                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                ),
+                Text(
+                  'account or email to continue us',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    LoginPageLogo(
+                      logo: Image(
+                        image: Assets.assets.images.facebook.provider(),
+                        height: 25,
+                        width: 25,
+                      ),
+                    ),
+                    const SizedBox(width: 22),
+                    LoginPageLogo(
+                      logo: Image(
+                        image: Assets.assets.images.google.provider(),
+                        height: 25,
+                        width: 25,
+                      ),
+                    ),
+                    const SizedBox(width: 22),
+                    LoginPageLogo(
+                      logo: Image(
+                        image: Assets.assets.images.apple.provider(),
+                        height: 25,
+                        width: 25,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.only(left: 27, right: 27),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      LoginPageLogo(
-                          logo: Image(
-                            image: Assets.assets.images.facebook.provider(),
-                            height: 25,
-                            width: 25,
-                          )),
-                      const SizedBox(width: 22),
-                      LoginPageLogo(
-                          logo: Image(
-                            image: Assets.assets.images.google.provider(),
-                            height: 25,
-                            width: 25,
-                          )),
-                      const SizedBox(width: 22),
-                      LoginPageLogo(
-                          logo: Image(
-                            image: Assets.assets.images.apple.provider(),
-                            height: 25,
-                            width: 25,
-                          )),
-                    ],
-                  ),
-                  const SizedBox(height: 55),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24, right: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                            height: 1,
-                            width: 150,
-                            color: const Color(0xFFCDD1D0)),
-                        const Text(
+                      Expanded(
+                        child: Container(
+                          height: 1,
+                          color: const Color(0xFFCDD1D0),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
                           'OR',
                           style: TextStyle(
                             fontFamily: FontFamily.circular,
                             color: Color(0xFFCDD1D0),
                           ),
                         ),
-                        Container(
+                      ),
+                      Expanded(
+                        child: Container(
                           height: 1,
-                          width: 150,
                           color: const Color(0xFFCDD1D0),
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24, right: 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Email',
-                        style: Theme.of(context).textTheme.headlineLarge ,
-                        ),
-                        TextField(
-                          decoration:const InputDecoration(
-                            hintText: 'Enter your email',
-                          ),
-                          controller: email,
-                        ),
-                        const SizedBox(height: 20),
-                        Text('Password',
-                          style: Theme.of(context).textTheme.headlineLarge ,
-                        ),
-                        PasswordField(
-                          controller: password,
-                          hintText: 'Enter your password',
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 24),
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                value: false,
-                                onChanged: (newValue) {},
-                              ),
-                              Text('Remember Me',
-                                style: Theme.of(context).textTheme.headlineLarge ,
-                              ),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context.go("/forgetPassword");
-                          },
-                          child: Text('Forget Password',
-                            style: Theme.of(context).textTheme.headlineLarge ,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 115),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(left: 24, right: 24),
-                    child: ElevatedButton(
-                      onPressed: (isButtonEnable)
-                          ? () => ref.read(loginProvider.notifier).signIn(
-                                email: email.text.toString(),
-                                password: password.text.toString(),
-                              )
-                          : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: (isButtonEnable)
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.secondary,
-                        minimumSize: const Size(double.infinity, 50),
                       ),
-                      child: loginState.isLoading
-                          ? const CircularProgressIndicator(
-                        backgroundColor:  Colors.white,
-                      )
-                          : Text(
-                        'Login',
-                        style: TextStyle(
-                          color: (isButtonEnable)
-                              ? Theme.of(context).colorScheme.surface
-                              : Theme.of(context).colorScheme.tertiary,
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.only(left: 24, right: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Email',
+                        style: Theme.of(context).textTheme.headlineLarge,
+                      ),
+                      TextField(
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your email',
+                        ),
+                        controller: email,
+                      ),
+                      const SizedBox(height: 30),
+                      Text(
+                        'Password',
+                        style: Theme.of(context).textTheme.headlineLarge,
+                      ),
+                      PasswordField(
+                        controller: password,
+                        hintText: 'Enter your password',
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 24),
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              value: false,
+                              onChanged: (newValue) {},
+                            ),
+                            Text(
+                              'Remember Me',
+                              style: Theme.of(context).textTheme.headlineLarge,
+                            ),
+                          ],
                         ),
                       ),
-                    ),
+                      TextButton(
+                        onPressed: () {
+                          context.go("/forgetPassword");
+                        },
+                        child: Text(
+                          'Forget Password',
+                          style: Theme.of(context).textTheme.headlineLarge,
+                        ),
+                      ),
+                    ],
                   ),
-                  TextButton(
-                    onPressed: () {
-                      GoRouter.of(context).pushNamed(Routes.signup);
-                    },
-                    child: Text("Don't have an account?Sign up",
-                      style: Theme.of(context).textTheme.headlineLarge ,
+                ),
+                const SizedBox(height: 121),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(left: 24, right: 24),
+                  child: ElevatedButton(
+                    onPressed: (isButtonEnable)
+                        ? () => ref.read(loginProvider.notifier).signIn(
+                              email: email.text.toString(),
+                              password: password.text.toString(),
+                            )
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: (isButtonEnable)
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.secondary,
+                      minimumSize: const Size(double.infinity, 50),
                     ),
+                    child: loginState.isLoading
+                        ? const CircularProgressIndicator(
+                            backgroundColor: Colors.white,
+                          )
+                        : Text(
+                            'Login',
+                            style: TextStyle(
+                              color: (isButtonEnable)
+                                  ? Theme.of(context).colorScheme.surface
+                                  : Theme.of(context).colorScheme.tertiary,
+                            ),
+                          ),
                   ),
-                ],
-              ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    GoRouter.of(context).pushNamed(Routes.signup);
+                  },
+                  child: Text(
+                    "Don't have an account?Signup",
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 
   Future<dynamic> _buildShowDialog(BuildContext context) {

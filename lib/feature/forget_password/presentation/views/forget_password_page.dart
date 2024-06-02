@@ -1,14 +1,14 @@
+import 'package:authentication_app/core/navigation/routes/routes_name.dart';
 import 'package:authentication_app/core/widgets/title_underline.dart';
 import 'package:authentication_app/feature/forget_password/controller/forget_password_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-
 class ForgetPasswordPage extends ConsumerStatefulWidget {
-
-  const ForgetPasswordPage(
-      {super.key,});
+  const ForgetPasswordPage({
+    super.key,
+  });
 
   @override
   ConsumerState<ForgetPasswordPage> createState() => _ForgetPasswordPageState();
@@ -16,24 +16,20 @@ class ForgetPasswordPage extends ConsumerStatefulWidget {
 
 class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
   TextEditingController email = TextEditingController();
-
-  ({bool email}) enableButtonNotifier = (email: false);
+  bool enableButtonNotifier = false;
 
   @override
   void initState() {
     super.initState();
 
     email.addListener(
-          () => updateEnableButtonNotifier(),
+      () => updateEnableButtonNotifier(),
     );
   }
-  bool isButtonEnable = false;
+
   void updateEnableButtonNotifier() {
     setState(() {
-      enableButtonNotifier = (
-      email: email.value.text.isNotEmpty,
-      );
-      isButtonEnable = enableButtonNotifier.email;
+      enableButtonNotifier = email.text.toString().isNotEmpty;
     });
   }
 
@@ -52,7 +48,14 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
     });
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.go('/');
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Center(
@@ -60,31 +63,34 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
               children: [
                 Stack(
                   children: [
-                    Text('Forgot Password',
+                    Text(
+                      'Forgot Password',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    const Underline(right: 77)
+                    const Underline(right: 77),
                   ],
                 ),
-                const SizedBox(height: 45),
-                Text('Enter your email address. We will send a code',
+                const SizedBox(height: 16),
+                Text(
+                  'Enter your email address. We will send a code',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                Text('to verify your identity',
+                Text(
+                  'to verify your identity',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                const SizedBox(height: 100),
-
+                const SizedBox(height: 70),
                 Padding(
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Your email',
-                        style: Theme.of(context).textTheme.headlineLarge ,
+                      Text(
+                        'Your email',
+                        style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       TextField(
-                        decoration:const InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Enter your email',
                         ),
                         controller: email,
@@ -92,34 +98,45 @@ class _ForgetPasswordPageState extends ConsumerState<ForgetPasswordPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 280),
+                const SizedBox(height: 347),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.only(left: 24, right: 24),
                   child: ElevatedButton(
-                    onPressed: (isButtonEnable)
-                        ? () => ref.read(forgetPasswordProvider.notifier).
-                    otpConfirmation(
-                      email: email.text.toString(),
-                    ): null,
+                    onPressed: (enableButtonNotifier)
+                        ? () => ref
+                            .read(forgetPasswordProvider.notifier)
+                            .otpConfirmation(
+                              email: email.text.toString(),
+                            )
+                        : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: (isButtonEnable)
+                      backgroundColor: (enableButtonNotifier)
                           ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).colorScheme.secondary,
                       minimumSize: const Size(double.infinity, 50),
                     ),
                     child: loginState.isLoading
                         ? const CircularProgressIndicator(
-                      backgroundColor:  Colors.white,
-                    )
+                            backgroundColor: Colors.white,
+                          )
                         : Text(
-                      'Submit',
-                      style: TextStyle(
-                        color: (isButtonEnable)
-                            ? Theme.of(context).colorScheme.surface
-                            : Theme.of(context).colorScheme.tertiary,
-                      ),
-                    ),
+                            'Submit',
+                            style: TextStyle(
+                              color: (enableButtonNotifier)
+                                  ? Theme.of(context).colorScheme.surface
+                                  : Theme.of(context).colorScheme.tertiary,
+                            ),
+                          ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    GoRouter.of(context).pushNamed(Routes.login);
+                  },
+                  child: Text(
+                    'Remember your password?Log In',
+                    style: Theme.of(context).textTheme.headlineLarge,
                   ),
                 ),
               ],

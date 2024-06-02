@@ -1,6 +1,8 @@
 import 'package:authentication_app/feature/reset_password/repository/reset_password_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 part 'reset_password_controller.g.dart';
+
 @riverpod
 class ResetPassword extends _$ResetPassword {
   @override
@@ -9,12 +11,14 @@ class ResetPassword extends _$ResetPassword {
   }
 
   void resetPassword({
-    required String email, required String password,
-    required String confirmPassword
-}) async {
+    required String email,
+    required String password,
+    required String confirmPassword,
+  }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      return ResetPasswordRepository().resetPassword(email, password, confirmPassword);
+      return ResetPasswordRepository().resetPassword(
+          email: email, password: password, confirmPassword: confirmPassword,);
     });
   }
 }

@@ -6,7 +6,7 @@ part of 'email_confirmation_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$emailConfirmationHash() => r'7244fe60fe7f9455abc65f3c6b5964b25818a644';
+String _$emailConfirmationHash() => r'3eb486796fc696ca36af9f66ee9f81ca8d89e450';
 
 /// See also [EmailConfirmation].
 @ProviderFor(EmailConfirmation)

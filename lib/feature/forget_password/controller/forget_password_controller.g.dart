@@ -6,7 +6,7 @@ part of 'forget_password_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$forgetPasswordHash() => r'018d188214be32e7963d9dec4ea8514eb3e63b1b';
+String _$forgetPasswordHash() => r'4df90e38a35558cd7c61c5dd26f235d1abd3e592';
 
 /// See also [ForgetPassword].
 @ProviderFor(ForgetPassword)
