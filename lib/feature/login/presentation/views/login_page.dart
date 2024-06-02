@@ -119,7 +119,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
                 const SizedBox(height: 30),
                 Padding(
-                  padding: const EdgeInsets.only(left: 27, right: 27),
+                  padding: const EdgeInsets.only(left: 22, right: 22),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -180,32 +180,31 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   height: 10,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 24),
+                  padding: const EdgeInsets.only(left:10,right: 22),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 24),
-                        child: Row(
-                          children: [
-                            Checkbox(
-                              value: false,
-                              onChanged: (newValue) {},
-                            ),
-                            Text(
-                              'Remember Me',
-                              style: Theme.of(context).textTheme.headlineLarge,
-                            ),
-                          ],
-                        ),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: false,
+                            onChanged: (newValue) {},
+                          ),
+                          Text(
+                            'Remember Me',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                        ],
                       ),
-                      TextButton(
-                        onPressed: () {
-                          context.go("/forgetPassword");
-                        },
-                        child: Text(
-                          'Forget Password',
-                          style: Theme.of(context).textTheme.headlineLarge,
+                      const SizedBox(width: 30,),
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () {
+                            context.go("/forgetPassword");
+                          },
+                          child: Text(
+                            'Forget Password?',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
                         ),
                       ),
                     ],
