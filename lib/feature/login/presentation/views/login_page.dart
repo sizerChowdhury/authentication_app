@@ -66,192 +66,181 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       appBar: AppBar(),
       body: SingleChildScrollView(
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 22, right: 22),
-            child: Column(
-              children: [
-                Stack(
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  Text(
+                    'Log In to Authy',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const Underline(right: 77),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Welcome back! Sign in using your social',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              Text(
+                'account or email to continue us',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LoginPageLogo(
+                    logo: Image(
+                      image: Assets.assets.images.facebook.provider(),
+                      height: 25,
+                      width: 25,
+                    ),
+                  ),
+                  const SizedBox(width: 22),
+                  LoginPageLogo(
+                    logo: Image(
+                      image: Assets.assets.images.google.provider(),
+                      height: 25,
+                      width: 25,
+                    ),
+                  ),
+                  const SizedBox(width: 22),
+                  LoginPageLogo(
+                    logo: Image(
+                      image: Assets.assets.images.apple.provider(),
+                      height: 25,
+                      width: 25,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.only(left: 22, right: 22),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 1,
+                        color: const Color(0xFFCDD1D0),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        'OR',
+                        style: TextStyle(
+                          fontFamily: FontFamily.circular,
+                          color: Color(0xFFCDD1D0),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 1,
+                        color: const Color(0xFFCDD1D0),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.only(left: 24, right: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Log In to Authy',
-                      style: Theme.of(context).textTheme.titleLarge,
+                      'Email',
+                      style: Theme.of(context).textTheme.headlineLarge,
                     ),
-                    const Underline(right: 77),
+                    TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Enter your email',
+                      ),
+                      controller: email,
+                    ),
+                    const SizedBox(height: 30),
+                    Text(
+                      'Password',
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
+                    PasswordField(
+                      controller: password,
+                      hintText: 'Enter your password',
+                    ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  'Welcome back! Sign in using your social',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Text(
-                  'account or email to continue us',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16, right: 22),
+                child: Row(
                   children: [
-                    LoginPageLogo(
-                      logo: Image(
-                        image: Assets.assets.images.facebook.provider(),
-                        height: 25,
-                        width: 25,
-                      ),
+                    Checkbox(
+                        value: false, onChanged: (newValue) {}, shape: null),
+                    Text(
+                      'Remember Me',
+                      style: Theme.of(context).textTheme.headlineLarge,
                     ),
-                    const SizedBox(width: 22),
-                    LoginPageLogo(
-                      logo: Image(
-                        image: Assets.assets.images.google.provider(),
-                        height: 25,
-                        width: 25,
-                      ),
-                    ),
-                    const SizedBox(width: 22),
-                    LoginPageLogo(
-                      logo: Image(
-                        image: Assets.assets.images.apple.provider(),
-                        height: 25,
-                        width: 25,
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () {
+                        context.go("/forgetPassword");
+                      },
+                      child: Text(
+                        'Forget Password?',
+                        style: Theme.of(context).textTheme.headlineLarge,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.only(left: 22, right: 22),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 1,
-                          color: const Color(0xFFCDD1D0),
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          'OR',
-                          style: TextStyle(
-                            fontFamily: FontFamily.circular,
-                            color: Color(0xFFCDD1D0),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          height: 1,
-                          color: const Color(0xFFCDD1D0),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.only(left: 24, right: 24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Email',
-                        style: Theme.of(context).textTheme.headlineLarge,
-                      ),
-                      TextField(
-                        decoration: const InputDecoration(
-                          hintText: 'Enter your email',
-                        ),
-                        controller: email,
-                      ),
-                      const SizedBox(height: 30),
-                      Text(
-                        'Password',
-                        style: Theme.of(context).textTheme.headlineLarge,
-                      ),
-                      PasswordField(
-                        controller: password,
-                        hintText: 'Enter your password',
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left:10,right: 22),
-                  child: Row(
-                    children: [
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: false,
-                            onChanged: (newValue) {},
-                          ),
-                          Text(
-                            'Remember Me',
-                            style: Theme.of(context).textTheme.headlineLarge,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 30,),
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () {
-                            context.go("/forgetPassword");
-                          },
-                          child: Text(
-                            'Forget Password?',
-                            style: Theme.of(context).textTheme.headlineLarge,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 121),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(left: 24, right: 24),
-                  child: ElevatedButton(
-                    onPressed: (isButtonEnable)
-                        ? () => ref.read(loginProvider.notifier).signIn(
-                              email: email.text.toString(),
-                              password: password.text.toString(),
-                            )
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: (isButtonEnable)
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.secondary,
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
-                    child: loginState.isLoading
-                        ? const CircularProgressIndicator(
-                            backgroundColor: Colors.white,
+              ),
+              const SizedBox(height: 100,),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.only(left: 24, right: 24),
+                child: ElevatedButton(
+                  onPressed: (isButtonEnable)
+                      ? () => ref.read(loginProvider.notifier).signIn(
+                            email: email.text.toString(),
+                            password: password.text.toString(),
                           )
-                        : Text(
-                            'Login',
-                            style: TextStyle(
-                              color: (isButtonEnable)
-                                  ? Theme.of(context).colorScheme.surface
-                                  : Theme.of(context).colorScheme.tertiary,
-                            ),
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: (isButtonEnable)
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.secondary,
+                    minimumSize: const Size(double.infinity, 50),
+                  ),
+                  child: loginState.isLoading
+                      ? const CircularProgressIndicator(
+                          backgroundColor: Colors.white,
+                        )
+                      : Text(
+                          'Login',
+                          style: TextStyle(
+                            color: (isButtonEnable)
+                                ? Theme.of(context).colorScheme.surface
+                                : Theme.of(context).colorScheme.tertiary,
                           ),
-                  ),
+                        ),
                 ),
-                TextButton(
-                  onPressed: () {
-                    GoRouter.of(context).pushNamed(Routes.signup);
-                  },
-                  child: Text(
-                    "Don't have an account?Signup",
-                    style: Theme.of(context).textTheme.headlineLarge,
-                  ),
+              ),
+              TextButton(
+                onPressed: () {
+                  GoRouter.of(context).pushNamed(Routes.signup);
+                },
+                child: Text(
+                  "Don't have an account?Sign up",
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
