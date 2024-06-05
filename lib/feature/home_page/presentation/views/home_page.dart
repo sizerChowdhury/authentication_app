@@ -26,7 +26,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(homePageProvider);
-    //final logoutFlag = ref.watch(logoutControllerProvider);
 
     ref.listen(homePageProvider, (_, next) {
       if (!next.isLoading) {
