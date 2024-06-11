@@ -1,3 +1,4 @@
+import 'package:authentication_app/core/navigation/routes/routes_name.dart';
 import 'package:authentication_app/core/widgets/password_filed.dart';
 import 'package:authentication_app/core/widgets/title_underline.dart';
 import 'package:authentication_app/feature/reset_password/presentation/riverpod/reset_password_controller.dart';
@@ -62,7 +63,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    context.go('/');
+                    context.go(Routes.login);
                   },
                   child: const Text('OK'),
                 ),
@@ -134,7 +135,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                     ),
                     PasswordField(
                       controller: password,
-                      hintText: '',
+                      hintText: '', errorPasswordVal: '',
                     ),
                     const SizedBox(height: 30),
                     Text(
@@ -143,7 +144,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
                     ),
                     PasswordField(
                       controller: confirmPassword,
-                      hintText: '',
+                      hintText: '', errorPasswordVal: '',
                     ),
                   ],
                 ),
