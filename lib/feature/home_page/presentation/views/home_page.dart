@@ -39,7 +39,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     ref.listen(logoutControllerProvider, (_, next) {
       if (next.value ?? false) {
-        context.go('/');
+        context.push('/');
       } else if (next.hasError && !next.isLoading) {
         print('logout failed');
       }
@@ -116,18 +116,19 @@ class _HomePageState extends ConsumerState<HomePage> {
               ElevatedButton(
                 onPressed: ref.read(logoutControllerProvider.notifier).getInfo,
                 style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
-                    backgroundColor: Theme.of(context).colorScheme.primary),
+                  minimumSize: const Size(double.infinity, 50),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
                 child: logoutState.isLoading
                     ? const CircularProgressIndicator(
-                  backgroundColor: Colors.white,
-                )
+                        backgroundColor: Colors.white,
+                      )
                     : Text(
-                  'Logout',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                ),
+                        'Logout',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.surface,
+                        ),
+                      ),
               ),
               const SizedBox(height: 37),
             ],

@@ -7,7 +7,7 @@ part of 'forget_password_use_case.dart';
 // **************************************************************************
 
 String _$forgetPasswordUseCaseHash() =>
-    r'9623bf02f4435cfc593012fb5bc7f568393cf02b';
+    r'de12b4ef600168d5dc7084b1bb72a9c48f545cc4';
 
 /// See also [forgetPasswordUseCase].
 @ProviderFor(forgetPasswordUseCase)
