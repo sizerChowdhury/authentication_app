@@ -78,8 +78,13 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               actions: [
                 TextButton(
                   onPressed: () {
+                    Navigator.of(context).pop();
                     context.go(
-                      '/emailConfirmation/$emailController/$pageSelector',
+                      Routes.emailConfirmation,
+                      extra: {
+                        'pageSelector': pageSelector,
+                        'email': emailController,
+                      },
                     );
                   },
                   child: const Text('OK'),
@@ -186,6 +191,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                       PasswordField(
                         controller: password,
                         hintText: '',
+                        errorPasswordVal: '',
                       ),
                     ],
                   ),
