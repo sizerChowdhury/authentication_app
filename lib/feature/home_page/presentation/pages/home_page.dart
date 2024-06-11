@@ -1,8 +1,7 @@
 import 'package:authentication_app/core/gen/assets.gen.dart';
-import 'package:authentication_app/core/navigation/routes/routes_name.dart';
 import 'package:authentication_app/core/widgets/title_underline.dart';
-import 'package:authentication_app/feature/home_page/presentation/riverpod/home_controller.dart';
-import 'package:authentication_app/feature/home_page/presentation/riverpod/logout_controller.dart';
+import 'package:authentication_app/feature/home_page/controller/home_page_controller.dart';
+import 'package:authentication_app/feature/home_page/controller/logout_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -21,17 +20,17 @@ class _HomePageState extends ConsumerState<HomePage> {
   void initState() {
     super.initState();
     Future(() {
-      ref.read(homeControllerProvider.notifier).getProfileInfo();
+      ref.read(homePageProvider.notifier).getInfo();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(homeControllerProvider);
+    final state = ref.watch(homePageProvider);
     final logoutState = ref.watch(logoutControllerProvider);
 
-    ref.listen(homeControllerProvider, (_, next) {
-      if (next.value?.$1 != null) {
+    ref.listen(homePageProvider, (_, next) {
+      if (!next.isLoading) {
         setState(() {
           flag = false;
         });
@@ -39,26 +38,10 @@ class _HomePageState extends ConsumerState<HomePage> {
     });
 
     ref.listen(logoutControllerProvider, (_, next) {
-      if (next.value?.$1 != null) {
-        context.go('/');
-      } else if (next.value?.$2 != null) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Error! Bad request.'),
-              content: const Text('Logout failed'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
+      if (next.value ?? false) {
+        context.push('/');
+      } else if (next.hasError && !next.isLoading) {
+        print('logout failed');
       }
     });
 
@@ -119,11 +102,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Name: ${state.value?.$1?.firstName}'
-                              ' ${state.value?.$1?.lastName}',
+                              'Name: ${state.value?.getFirstName()}'
+                              ' ${state.value?.getLastName()}',
                             ),
                             Text(
-                              'Email: ${state.value?.$1?.email}',
+                              'Email: ${state.value?.getEmail()}',
                             ),
                           ],
                         ),
@@ -131,7 +114,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               const Spacer(),
               ElevatedButton(
-                onPressed: ref.read(logoutControllerProvider.notifier).logout,
+                onPressed: ref.read(logoutControllerProvider.notifier).getInfo,
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
                   backgroundColor: Theme.of(context).colorScheme.primary,
