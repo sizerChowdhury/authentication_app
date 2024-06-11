@@ -42,10 +42,11 @@ class MyRouterConfig {
       GoRoute(
         path: Routes.emailConfirmation,
         pageBuilder: (context, state) {
+          final data = state.extra as Map<String, String>;
           return MaterialPage(
             child: EmailConfirmationPage(
-              email: state.pathParameters['email']!,
-              pageSelector: state.pathParameters['pageSelector']!,
+              email: data['email']!,
+              pageSelector: data['pageSelector']!,
             ),
           );
         },
