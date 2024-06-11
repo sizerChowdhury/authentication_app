@@ -32,9 +32,10 @@ class MyRouterConfig {
       GoRoute(
         path: Routes.resetPassword,
         pageBuilder: (context, state) {
+          final data = state.extra as Map<String,String>;
           return MaterialPage(
             child: ResetPasswordPage(
-              email: state.pathParameters['email']!,
+              email: data['email']!,
             ),
           );
         },
