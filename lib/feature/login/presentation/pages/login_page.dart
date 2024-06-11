@@ -21,6 +21,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   TextEditingController password = TextEditingController();
   bool isButtonEnable = false;
   bool? enableCheckbox = false;
+  bool? isLogin = false;
   String errorPasswordVal = '';
 
   ({bool email, bool password}) enableButtonNotifier =
@@ -55,7 +56,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final loginState = ref.watch(signInProvider);
     ref.listen(signInProvider, (_, next) async {
       if (next.value != null) {
-        context.go('/homePage');
+        context.go(Routes.home);
       } else if (next.hasError && !next.isLoading) {
         String message = next.error.toString();
         if (message.startsWith('Exception: ')) {
@@ -220,6 +221,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           onChanged: (newValue) {
                             setState(() {
                               enableCheckbox = newValue;
+                              isLogin = true;
                             });
                           },
                           shape: RoundedRectangleBorder(
@@ -278,6 +280,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ? () => ref.read(signInProvider.notifier).signIn(
                           email: email.text.toString(),
                           password: password.text.toString(),
+                          isLogin: isLogin,
                         )
                     : null,
                 style: ElevatedButton.styleFrom(
