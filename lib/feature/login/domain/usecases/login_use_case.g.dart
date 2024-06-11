@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_login.dart';
+part of 'login_use_case.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loginUseCaseHash() => r'03077f6eb10c16ee04cb67aa7647a7dff206ac9a';
+String _$loginUseCaseHash() => r'a0babc2f650f13f171560b7863046c77906fddb3';
 
 /// See also [loginUseCase].
 @ProviderFor(loginUseCase)

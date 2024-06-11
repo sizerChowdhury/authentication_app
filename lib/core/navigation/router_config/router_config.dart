@@ -12,29 +12,29 @@ class MyRouterConfig {
   static GoRouter router = GoRouter(
     routes: [
       GoRoute(
-        name: Routes.login,
-        path: "/",
+        //name: Routes.login,
+        path: Routes.login,
         pageBuilder: (context, state) {
           return const MaterialPage(child: LoginPage());
         },
       ),
       GoRoute(
-        name: Routes.signup,
-        path: "/signUp",
+        //name: Routes.signup,
+        path: Routes.signup,
         pageBuilder: (context, state) {
           return const MaterialPage(child: SignUpPage());
         },
       ),
       GoRoute(
-        name: Routes.forgetPassword,
-        path: "/forgetPassword",
+        //name: Routes.forgetPassword,
+        path: Routes.forgetPassword,
         pageBuilder: (context, state) {
           return const MaterialPage(child: ForgetPasswordPage());
         },
       ),
       GoRoute(
-        name: Routes.resetPassword,
-        path: "/resetPassword/:email",
+        //name: Routes.resetPassword,
+        path: Routes.resetPassword,
         pageBuilder: (context, state) {
           return MaterialPage(
             child: ResetPasswordPage(
@@ -44,8 +44,8 @@ class MyRouterConfig {
         },
       ),
       GoRoute(
-        name: Routes.emailConfirmation,
-        path: "/emailConfirmation/:email/:pageSelector",
+        //name: Routes.emailConfirmation,
+        path: Routes.emailConfirmation,
         pageBuilder: (context, state) {
           return MaterialPage(
             child: EmailConfirmationPage(
@@ -56,8 +56,8 @@ class MyRouterConfig {
         },
       ),
       GoRoute(
-        name: Routes.home,
-        path: "/homePage",
+        // name: Routes.home,
+        path: Routes.home,
         pageBuilder: (context, state) {
           return const MaterialPage(child: HomePage());
         },
