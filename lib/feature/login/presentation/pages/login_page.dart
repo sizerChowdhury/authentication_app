@@ -55,7 +55,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final loginState = ref.watch(signInProvider);
     ref.listen(signInProvider, (_, next) async {
       if (next.value != null) {
-        context.go('/homePage');
+        context.push(Routes.home);
       } else if (next.hasError && !next.isLoading) {
         String message = next.error.toString();
         if (message.startsWith('Exception: ')) {
@@ -259,7 +259,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   const Spacer(),
                   TextButton(
                     onPressed: () {
-                      context.go("/forgetPassword");
+                      context.push(Routes.forgetPassword);
                     },
                     child: Text(
                       'Forget Password?',
@@ -302,7 +302,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ),
             TextButton(
               onPressed: () {
-                GoRouter.of(context).pushNamed(Routes.signup);
+                context.go(Routes.signup);
               },
               child: Text(
                 "Don't have an account? Signup",
