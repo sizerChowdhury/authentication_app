@@ -20,6 +20,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   bool isButtonEnable = false;
+  bool? enableCheckbox = false;
+  String errorPasswordVal = '';
 
   ({bool email, bool password}) enableButtonNotifier =
       (email: false, password: false);
@@ -50,15 +52,39 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final loginState = ref.watch(loginProvider);
-    ref.listen(loginProvider, (_, next) async {
+    final loginState = ref.watch(signInProvider);
+    ref.listen(signInProvider, (_, next) async {
       if (next.value != null) {
-        context.go('/homePage');
+        context.push(Routes.home);
       } else if (next.hasError && !next.isLoading) {
-        _buildShowDialog(context);
+        String message = next.error.toString();
+        if (message.startsWith('Exception: ')) {
+          message = message.substring('Exception: '.length);
+        }
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Error! Bad request.'),
+              content: Text(
+                message,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       }
     });
-
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
@@ -68,7 +94,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             Stack(
               children: [
                 Text(
-                  'Log In to Authyy',
+                  'Log In to Authy',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const Underline(right: 77),
@@ -162,8 +188,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
                   PasswordField(
+                    onChanged: (value) {
+                      setState(() {
+                        if (value.length < 6) {
+                          errorPasswordVal = 'Password length must be'
+                              ' greater than or equal to 6';
+                        } else {
+                          errorPasswordVal = '';
+                        }
+                      });
+                    },
                     controller: password,
                     hintText: 'Enter your password',
+                    errorPasswordVal: errorPasswordVal,
                   ),
                 ],
               ),
@@ -175,28 +212,58 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 children: [
                   Row(
                     children: [
-                      Checkbox(
-                        value: false,
-                        onChanged: (newValue) {},
+                      SizedBox(
+                        height: 10,
+                        width: 10,
+                        child: Checkbox(
+                          value: enableCheckbox,
+                          onChanged: (newValue) {
+                            setState(() {
+                              enableCheckbox = newValue;
+                            });
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          fillColor: (enableCheckbox!)
+                              ? WidgetStatePropertyAll(
+                                  Theme.of(context).colorScheme.primary,
+                                )
+                              : WidgetStatePropertyAll(
+                                  Theme.of(context)
+                                      .colorScheme
+                                      .secondary
+                                      .withOpacity(0.5),
+                                ),
+                          side: (enableCheckbox!)
+                              ? BorderSide(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withOpacity(0.1),
+                                  width: 2,
+                                )
+                              : BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 2,
+                                ),
+                        ),
                       ),
+                      const SizedBox(width: 7),
                       Text(
                         'Remember Me',
                         style: Theme.of(context).textTheme.headlineLarge,
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    width: 30,
-                  ),
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        context.go("/forgetPassword");
-                      },
-                      child: Text(
-                        'Forget Password?',
-                        style: Theme.of(context).textTheme.headlineLarge,
-                      ),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: () {
+                      context.push(Routes.forgetPassword);
+                    },
+                    child: Text(
+                      'Forget Password?',
+                      style: Theme.of(context).textTheme.headlineLarge,
                     ),
                   ),
                 ],
@@ -208,7 +275,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               padding: const EdgeInsets.only(left: 24, right: 24),
               child: ElevatedButton(
                 onPressed: (isButtonEnable)
-                    ? () => ref.read(loginProvider.notifier).signIn(
+                    ? () => ref.read(signInProvider.notifier).signIn(
                           email: email.text.toString(),
                           password: password.text.toString(),
                         )
@@ -235,10 +302,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ),
             TextButton(
               onPressed: () {
-                GoRouter.of(context).pushNamed(Routes.signup);
+                context.go(Routes.signup);
               },
               child: Text(
-                "Don't have an account?Signup",
+                "Don't have an account? Signup",
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
             ),
@@ -249,23 +316,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  Future<dynamic> _buildShowDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error! Bad request.'),
-          content: const Text('Invalid Email or Password'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+// Future<dynamic> _buildShowDialog(BuildContext context) {
+//   return showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         title: const Text('Error! Bad request.'),
+//         content: const Text('Invalid Email or Password'),
+//         actions: [
+//           TextButton(
+//             onPressed: () {
+//               Navigator.of(context).pop();
+//             },
+//             child: const Text('OK'),
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }
 }

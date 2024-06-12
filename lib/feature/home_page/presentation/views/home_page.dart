@@ -1,6 +1,8 @@
 import 'package:authentication_app/core/gen/assets.gen.dart';
+import 'package:authentication_app/core/navigation/routes/routes_name.dart';
 import 'package:authentication_app/core/widgets/title_underline.dart';
 import 'package:authentication_app/feature/home_page/controller/home_page_controller.dart';
+import 'package:authentication_app/feature/home_page/controller/logout_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -26,13 +28,21 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(homePageProvider);
-    //final logoutFlag = ref.watch(logoutControllerProvider);
+    final logoutState = ref.watch(logoutControllerProvider);
 
     ref.listen(homePageProvider, (_, next) {
       if (!next.isLoading) {
         setState(() {
           flag = false;
         });
+      }
+    });
+
+    ref.listen(logoutControllerProvider, (_, next) {
+      if (next.value ?? false) {
+        context.push(Routes.login);
+      } else if (next.hasError && !next.isLoading) {
+        print('logout failed');
       }
     });
 
@@ -47,7 +57,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         title: Stack(
           children: [
             Text(
-              'HomePage',
+              'Home Page',
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const Underline(right: 50),
@@ -79,25 +89,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                     height: 75,
                     width: 80,
                   ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: 30,
-                      height: 30,
-                      decoration: const BoxDecoration(
-                        color: Color(
-                          0xFF24786D,
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.camera_alt,
-                        color: Colors.white,
-                        size: 15,
-                      ),
-                    ),
-                  ),
                 ],
               ),
               const SizedBox(
@@ -122,6 +113,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                 ],
               ),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: ref.read(logoutControllerProvider.notifier).getInfo,
+                style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 50),
+                    backgroundColor: Theme.of(context).colorScheme.primary),
+                child: logoutState.isLoading
+                    ? const CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                )
+                    : Text(
+                  'Logout',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 37),
             ],
           ),
         ),
