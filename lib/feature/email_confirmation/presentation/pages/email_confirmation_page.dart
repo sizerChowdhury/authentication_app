@@ -84,8 +84,8 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('successful'),
-              content: Text('${next.value?.$1?.message.toString()}'),
+              title: const Text('Email verification successful'),
+              content: const Text('Press OK'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -113,7 +113,7 @@ class _EmailConfirmationPageState extends ConsumerState<EmailConfirmationPage> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Failed'),
-              content: Text('${next.value?.$2?.toString()}'),
+              content: const Text('verification unsuccessful'),
               actions: [
                 TextButton(
                   onPressed: () {
