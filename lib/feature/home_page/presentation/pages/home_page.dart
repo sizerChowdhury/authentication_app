@@ -1,8 +1,9 @@
+import 'dart:io';
 import 'package:authentication_app/core/gen/assets.gen.dart';
 import 'package:authentication_app/core/navigation/routes/routes_name.dart';
 import 'package:authentication_app/core/widgets/title_underline.dart';
-import 'package:authentication_app/feature/home_page/controller/home_page_controller.dart';
-import 'package:authentication_app/feature/home_page/controller/logout_controller.dart';
+import 'package:authentication_app/feature/home_page/presentation/riverpod/home_controller.dart';
+import 'package:authentication_app/feature/home_page/presentation/riverpod/logout_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -21,17 +22,17 @@ class _HomePageState extends ConsumerState<HomePage> {
   void initState() {
     super.initState();
     Future(() {
-      ref.read(homePageProvider.notifier).getInfo();
+      ref.read(homeControllerProvider.notifier).getProfileInfo();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(homePageProvider);
+    final state = ref.watch(homeControllerProvider);
     final logoutState = ref.watch(logoutControllerProvider);
 
-    ref.listen(homePageProvider, (_, next) {
-      if (!next.isLoading) {
+    ref.listen(homeControllerProvider, (_, next) {
+      if (next.value?.$1 != null) {
         setState(() {
           flag = false;
         });
@@ -39,10 +40,26 @@ class _HomePageState extends ConsumerState<HomePage> {
     });
 
     ref.listen(logoutControllerProvider, (_, next) {
-      if (next.value ?? false) {
+      if (next.value?.$1 != null && next.value?.$2 == null) {
         context.push(Routes.login);
-      } else if (next.hasError && !next.isLoading) {
-        print('logout failed');
+      } else if (next.value?.$1 == null && next.value?.$2 != null) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Request Failed!'),
+              content: Text('${next.value?.$2}'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       }
     });
 
@@ -51,7 +68,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            context.go('/');
+            exit(0);
           },
         ),
         title: Stack(
@@ -103,11 +120,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Name: ${state.value?.getFirstName()}'
-                              ' ${state.value?.getLastName()}',
+                              'Name: ${state.value?.$1?.firstName}'
+                              ' ${state.value?.$1?.lastName}',
                             ),
                             Text(
-                              'Email: ${state.value?.getEmail()}',
+                              'Email: ${state.value?.$1?.email}',
                             ),
                           ],
                         ),
@@ -115,20 +132,21 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               const Spacer(),
               ElevatedButton(
-                onPressed: ref.read(logoutControllerProvider.notifier).getInfo,
+                onPressed: ref.read(logoutControllerProvider.notifier).logout,
                 style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
-                    backgroundColor: Theme.of(context).colorScheme.primary),
+                  minimumSize: const Size(double.infinity, 50),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
                 child: logoutState.isLoading
                     ? const CircularProgressIndicator(
-                  backgroundColor: Colors.white,
-                )
+                        backgroundColor: Colors.white,
+                      )
                     : Text(
-                  'Logout',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                ),
+                        'Logout',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.surface,
+                        ),
+                      ),
               ),
               const SizedBox(height: 37),
             ],
