@@ -71,7 +71,7 @@ class MyRouterConfig {
       final isLoggedIn = (email != null);
 
       if (isLoggedIn && state.fullPath == '/') {
-        return '/homePage';
+        return Routes.home;
       } else if (!isLoggedIn && state.fullPath == '/') {
         return '/';
       }

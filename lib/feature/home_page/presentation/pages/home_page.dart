@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:authentication_app/core/gen/assets.gen.dart';
 import 'package:authentication_app/core/widgets/title_underline.dart';
 import 'package:authentication_app/feature/home_page/presentation/riverpod/home_controller.dart';
@@ -46,7 +48,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('Error! Bad request.'),
-              content: const Text('Logout failed'),
+              content: Text('${next.value?.$2}'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -66,7 +68,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            context.go('/');
+            exit(0);
           },
         ),
         title: Stack(
