@@ -1,4 +1,5 @@
 import 'package:authentication_app/core/gen/assets.gen.dart';
+import 'package:authentication_app/core/navigation/routes/routes_name.dart';
 import 'package:authentication_app/core/widgets/title_underline.dart';
 import 'package:authentication_app/feature/home_page/controller/home_page_controller.dart';
 import 'package:authentication_app/feature/home_page/controller/logout_controller.dart';
@@ -39,7 +40,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     ref.listen(logoutControllerProvider, (_, next) {
       if (next.value ?? false) {
-        context.go('/');
+        context.push(Routes.login);
       } else if (next.hasError && !next.isLoading) {
         print('logout failed');
       }
